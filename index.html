@@ -221,7 +221,230 @@
       padding: 25px 0;
       margin-bottom: 20px;
     }
-    
+
+    /* РЕСТОРАН ТУРАЛЫ СЕКЦИЯ */
+    .about-section {
+      padding: 30px 0 10px;
+      margin-bottom: 30px;
+      display: block;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      gap: 40px;
+      align-items: stretch;
+    }
+
+    .about-text-card {
+      background: radial-gradient(circle at top left, rgba(196, 30, 58, 0.06), transparent 60%),
+                  radial-gradient(circle at bottom right, rgba(212, 175, 55, 0.08), transparent 60%),
+                  #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 32px 30px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-text-card::before {
+      content: 'H';
+      position: absolute;
+      font-family: 'Playfair Display', serif;
+      font-size: 120px;
+      font-weight: 700;
+      color: rgba(196, 30, 58, 0.05);
+      top: -30px;
+      right: 10px;
+      pointer-events: none;
+    }
+
+    .about-kicker {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .about-kicker i {
+      font-size: 10px;
+    }
+
+    .about-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .about-lead {
+      font-size: 16px;
+      color: var(--text-light);
+      margin-bottom: 18px;
+    }
+
+    .about-highlights {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .about-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+      background: rgba(246, 246, 246, 0.9);
+      color: var(--text-light);
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      backdrop-filter: blur(4px);
+      white-space: nowrap;
+    }
+
+    .about-pill i {
+      font-size: 12px;
+      color: var(--primary);
+    }
+
+    .about-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 6px;
+    }
+
+    .about-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .about-meta-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-light);
+    }
+
+    .about-meta-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .about-photos {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(2, 120px);
+      gap: 12px;
+      position: relative;
+    }
+
+    .about-photo-card {
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf7 100%);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transform-origin: center;
+      transition: transform 0.5s ease, box-shadow 0.5s ease, filter 0.5s ease;
+    }
+
+    .about-photo-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, rgba(0, 0, 0, 0.15), transparent 55%);
+      opacity: 0.3;
+      transition: opacity 0.4s ease;
+    }
+
+    .about-photo-card.small-label::before {
+      content: 'Hall';
+      position: absolute;
+      bottom: 10px;
+      left: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255, 255, 255, 0.9);
+      z-index: 2;
+    }
+
+    .about-photo-card.table-label::before {
+      content: 'Chef\'s table';
+      position: absolute;
+      bottom: 10px;
+      left: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255, 255, 255, 0.9);
+      z-index: 2;
+    }
+
+    .about-photo-card.bar-label::before {
+      content: 'Lounge';
+      position: absolute;
+      bottom: 10px;
+      left: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255, 255, 255, 0.9);
+      z-index: 2;
+    }
+
+    .about-photo-card.big {
+      grid-row: span 2;
+    }
+
+    .about-photo-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+      filter: saturate(1.1);
+    }
+
+    .about-photo-card:hover::after {
+      opacity: 0.15;
+    }
+
+    .about-photo-badge {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      backdrop-filter: blur(6px);
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .about-photo-badge i {
+      font-size: 10px;
+    }
+
     /* Карточкалар */
     .card {
       background: var(--bg-card);
@@ -813,6 +1036,15 @@
       .social-link {
         min-width: 180px;
       }
+
+      .about-section {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .about-photos {
+        grid-template-rows: repeat(2, 140px);
+      }
     }
     
     @media (max-width: 768px) {
@@ -861,6 +1093,10 @@
         flex-direction: column;
         gap: 15px;
       }
+
+      .about-text-card {
+        padding: 26px 22px;
+      }
     }
     
     @media (max-width: 480px) {
@@ -887,6 +1123,11 @@
       .btn, .social-link {
         padding: 16px 24px;
         width: 100%;
+      }
+
+      .about-photos {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(2, 110px);
       }
     }
   </style>
@@ -920,10 +1161,61 @@
         Біздің мейрамханаға келген кезде қалдырған телефон нөміріңізді енгізіңіз.
       </p>
     </section>
+
+    <!-- РЕСТОРАН ТУРАЛЫ СЕКЦИЯ -->
+    <section class="about-section animate-on-scroll">
+      <div class="about-text-card">
+        <div class="about-kicker">
+          <i class="fas fa-circle"></i>
+          Премиум кеңістік & сервис
+        </div>
+        <h2 class="about-title">Habi мейрамханасы — авторлық асүй, стильді интерьер және жылы қарсы алуды 
+          біріктіретін кеңістік.</h2>
+        <div class="about-highlights">
+          <div class="about-pill">
+            <i class="fas fa-wine-glass-alt"></i>
+            Авторлық сусындар мен десерттер
+          </div>
+          <div class="about-pill">
+            <i class="fas fa-music"></i>
+            Жұмсақ музыка және lounge атмосфера
+          </div>
+          <div class="about-pill">
+            <i class="fas fa-chair"></i>
+            Ыңғайлы отыратын аймақтар
+          </div>
+          <div class="about-pill">
+            <i class="fas fa-birthday-cake"></i>
+            Мерекелер мен банкеттерге арналған формат
+          </div>
+        </div>
+        <div class="about-meta">
+          <div class="about-meta-item">
+            <div class="about-meta-label">Орналасқан жері</div>
+            <div class="about-meta-value">Алматы, қаланың орталық аймағы</div>
+          </div>
+          <div class="about-meta-item">
+            <div class="about-meta-label">Формат</div>
+            <div class="about-meta-value">Restaurant & lounge</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="about-photos">
+        <div class="about-photo-card big small-label" style="background-image:url('/img/habi-hall.jpg');">
+          <div class="about-photo-badge">
+            <i class="fas fa-star"></i>
+            Main hall
+          </div>
+        </div>
+        <div class="about-photo-card table-label" style="background-image:url('/img/habi-table.jpg');"></div>
+        <div class="about-photo-card bar-label" style="background-image:url('/img/habi-bar.jpg');"></div>
+      </div> -->
+    </section>
     
     <section class="card animate-on-scroll">
-      <h2 class="card-title">Бонус жүйесіне кіру</h2>
-      <p class="card-subtitle">5000-нан астам қонақ Habi бонус бағдарламасын қолданып, сыйлықтар алып отыр</p>
+      <h2 class="card-title">Бонусыңызды тексеріңіз</h2>
+      <p class="card-subtitle">1000-нан астам қонақ Habi бонус бағдарламасын қолданып, сыйлықтар алып отыр</p>
       
       <div class="form-group">
         <label class="form-label">Телефон нөмірі</label>
@@ -988,6 +1280,8 @@
           <div class="contact-icon">
             <i class="fas fa-map-marker-alt"></i>
           </div>
+          <div class="contact-text">Мекенжай</div>
+          <div class="contact-detail">Алматы, (мекенжайды осында енгізуге болады)</div>
         </div>
         
         <div class="contact-item">
@@ -995,7 +1289,7 @@
             <i class="fas fa-phone"></i>
           </div>
           <div class="contact-text">Телефон</div>
-          <div class="contact-detail">+7 (777) 123-45-67</div>
+          <div class="contact-detail">+7 706 870 6666</div>
         </div>
         
         <div class="contact-item">
@@ -1010,7 +1304,7 @@
     
     <footer class="app-footer animate-on-scroll">
       <p>© 2025 Habi мейрамханасы. Барлық құқықтар қорғалған.</p>
-      <p>+7 7068706666</p>
+      <p>+7 706 870 6666</p>
       
       <div class="footer-links">
         <a href="#"><i class="fas fa-info-circle"></i> Мейрамхана туралы</a>
