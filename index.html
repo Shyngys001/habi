@@ -4,20 +4,23 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Habi Cafe & Hogo — Қонақ кабинеті</title>
+
+  <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
   <style>
     :root {
-      --primary: #C41E3A; /* Мейрамхана үшін элегантты қызыл */
+      --primary: #C41E3A;
       --primary-light: #FF4D6D;
       --primary-dark: #8B0000;
-      --secondary: #D4AF37; /* Алтын акцент */
-      --accent: #2A9D8F; /* Акцент түс */
+      --secondary: #D4AF37;
+      --accent: #2A9D8F;
       --text: #1a1a1a;
       --text-light: #5a5a5a;
-      --bg: #fab0bf24; /* Таза ақ фон */
+      --bg: #fab0bf24;
       --bg-light: #FFF9F5;
       --bg-card: #ffffff;
       --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
@@ -27,10 +30,10 @@
       --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
     }
 
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
@@ -43,48 +46,28 @@
       position: relative;
     }
 
-    /* Анимирленген ақ фон (бөлшектер) */
+    /* Animated background */
     .bg-animated {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       z-index: -2;
       overflow: hidden;
     }
-    
+
     .particle {
       position: absolute;
-      background: rgba(196, 30, 58, 0.03);
       border-radius: 50%;
       animation: float 20s infinite linear;
     }
-    
+
     @keyframes float {
-      0% {
-        transform: translateY(0) translateX(0) rotate(0deg);
-        opacity: 0.5;
-      }
-      25% {
-        transform: translateY(-20px) translateX(20px) rotate(90deg);
-        opacity: 0.7;
-      }
-      50% {
-        transform: translateY(0) translateX(40px) rotate(180deg);
-        opacity: 0.5;
-      }
-      75% {
-        transform: translateY(20px) translateX(20px) rotate(270deg);
-        opacity: 0.7;
-      }
-      100% {
-        transform: translateY(0) translateX(0) rotate(360deg);
-        opacity: 0.5;
-      }
+      0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0.5; }
+      25% { transform: translateY(-20px) translateX(20px) rotate(90deg); opacity: 0.7; }
+      50% { transform: translateY(0) translateX(40px) rotate(180deg); opacity: 0.5; }
+      75% { transform: translateY(20px) translateX(20px) rotate(270deg); opacity: 0.7; }
+      100% { transform: translateY(0) translateX(0) rotate(360deg); opacity: 0.5; }
     }
-    
-    /* Жоғарғы градиент жолағы */
+
     .top-gradient {
       position: absolute;
       top: 0;
@@ -95,7 +78,24 @@
       z-index: -1;
     }
 
-    /* Мейрамхана логотипі */
+    .app-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 25px 0;
+      margin-bottom: 20px;
+      gap: 16px;
+    }
+
     .restaurant-logo {
       display: flex;
       align-items: center;
@@ -103,53 +103,43 @@
       text-decoration: none;
       transition: var(--transition);
     }
-    
+
     .logo-img {
       width: 60px;
       height: 60px;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
       overflow: hidden;
       box-shadow: 0 10px 20px rgba(196, 30, 58, 0.2);
-      transition: var(--transition);
     }
 
     .logo-img img {
       width: 60px;
       height: 60px;
     }
-    
+
     .logo-img::after {
       content: '';
       position: absolute;
-      top: -10px;
-      left: -10px;
-      right: -10px;
-      bottom: -10px;
+      inset: -10px;
       background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
       transform: translateX(-100%);
       transition: transform 0.6s ease;
     }
-    
+
     .restaurant-logo:hover .logo-img::after {
       transform: translateX(100%);
     }
-    
-    .logo-img i {
-      font-size: 24px;
-      color: white;
-      z-index: 1;
-    }
-    
+
     .logo-text {
       display: flex;
       flex-direction: column;
     }
-    
+
     .logo-main {
       font-family: 'Playfair Display', serif;
       font-size: 28px;
@@ -158,7 +148,7 @@
       letter-spacing: 1px;
       line-height: 1.1;
     }
-    
+
     .logo-sub {
       font-size: 12px;
       color: var(--text-light);
@@ -167,13 +157,68 @@
       margin-top: 4px;
     }
 
-    /* Хиро-секция */
+    /* Lang switch */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.08);
+      overflow: hidden;
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    }
+
+    .lang-btn {
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: var(--text-light);
+      letter-spacing: 0.5px;
+      transition: var(--transition);
+    }
+
+    .lang-btn.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .link-admin {
+      font-size: 14px;
+      color: var(--text-light);
+      text-align: right;
+    }
+
+    .link-admin a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+    }
+
+    .link-admin a:hover {
+      color: var(--primary-dark);
+      text-decoration: underline;
+    }
+
+    /* Hero */
     .hero-section {
       padding: 60px 0 40px;
       text-align: center;
       position: relative;
     }
-    
+
     .hero-title {
       font-family: 'Playfair Display', serif;
       font-size: 48px;
@@ -182,24 +227,24 @@
       margin-bottom: 20px;
       line-height: 1.2;
     }
-    
+
     .hero-title span {
       color: var(--primary);
       position: relative;
       display: inline-block;
     }
-    
+
     .hero-title span::after {
       content: '';
       position: absolute;
-      bottom: 5px;
       left: 0;
+      bottom: 5px;
       width: 100%;
       height: 8px;
-      background-color: rgba(212, 175, 55, 0.3);
+      background: rgba(212, 175, 55, 0.3);
       z-index: -1;
     }
-    
+
     .hero-subtitle {
       font-size: 20px;
       color: var(--text-light);
@@ -207,365 +252,56 @@
       margin: 0 auto 40px;
       font-weight: 300;
     }
-    
-    /* Негізгі контейнер */
-    .app-container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 20px 60px;
-      position: relative;
-      z-index: 1;
-    }
-    
-    /* Жоғарғы хедер */
-    .app-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 25px 0;
-      margin-bottom: 20px;
-    }
 
-    /* РЕСТОРАН ТУРАЛЫ СЕКЦИЯ */
-    .about-section {
-      padding: 30px 0 10px;
-      margin-bottom: 30px;
-      display: block;
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-      gap: 40px;
-      align-items: stretch;
-    }
-
-    .about-text-card {
-      background: radial-gradient(circle at top left, rgba(196, 30, 58, 0.06), transparent 60%),
-                  radial-gradient(circle at bottom right, rgba(212, 175, 55, 0.08), transparent 60%),
-                  #ffffff;
-      border-radius: var(--radius-lg);
-      padding: 32px 30px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(0, 0, 0, 0.03);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .about-text-card::before {
-      content: 'H';
-      position: absolute;
-      font-family: 'Playfair Display', serif;
-      font-size: 120px;
-      font-weight: 700;
-      color: rgba(196, 30, 58, 0.05);
-      top: -30px;
-      right: 10px;
-      pointer-events: none;
-    }
-
-    .about-kicker {
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      font-weight: 600;
-      color: var(--primary);
-      margin-bottom: 10px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .about-kicker i {
-      font-size: 10px;
-    }
-
-    .about-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 30px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      color: var(--text);
-    }
-
-    .about-lead {
-      font-size: 16px;
-      color: var(--text-light);
-      margin-bottom: 18px;
-    }
-
-    .about-highlights {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-
-    .about-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 500;
-      background: rgba(246, 246, 246, 0.9);
-      color: var(--text-light);
-      border: 1px solid rgba(0, 0, 0, 0.03);
-      backdrop-filter: blur(4px);
-      white-space: nowrap;
-    }
-
-    .about-pill i {
-      font-size: 12px;
-      color: var(--primary);
-    }
-
-    .about-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-top: 6px;
-    }
-
-    .about-meta-item {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .about-meta-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--text-light);
-    }
-
-    .about-meta-value {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .about-photos {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      grid-template-rows: repeat(2, 120px);
-      gap: 12px;
-      position: relative;
-    }
-
-    .about-photo-card {
-      border-radius: 18px;
-      overflow: hidden;
-      position: relative;
-      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf7 100%);
-      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      transform-origin: center;
-      transition: transform 0.5s ease, box-shadow 0.5s ease, filter 0.5s ease;
-    }
-
-    .about-photo-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(145deg, rgba(0, 0, 0, 0.15), transparent 55%);
-      opacity: 0.3;
-      transition: opacity 0.4s ease;
-    }
-
-    .about-photo-card.small-label::before {
-      content: 'Hall';
-      position: absolute;
-      bottom: 10px;
-      left: 12px;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: rgba(255, 255, 255, 0.9);
-      z-index: 2;
-    }
-
-    .about-photo-card.table-label::before {
-      content: 'Chef\'s table';
-      position: absolute;
-      bottom: 10px;
-      left: 12px;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: rgba(255, 255, 255, 0.9);
-      z-index: 2;
-    }
-
-    .about-photo-card.bar-label::before {
-      content: 'Lounge';
-      position: absolute;
-      bottom: 10px;
-      left: 12px;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: rgba(255, 255, 255, 0.9);
-      z-index: 2;
-    }
-
-    .about-photo-card.big {
-      grid-row: span 2;
-    }
-
-    .about-photo-card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
-      filter: saturate(1.1);
-    }
-
-    .about-photo-card:hover::after {
-      opacity: 0.15;
-    }
-
-    .about-photo-badge {
-      position: absolute;
-      top: 10px;
-      right: 12px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      background: rgba(0, 0, 0, 0.4);
-      color: #fff;
-      backdrop-filter: blur(6px);
-      z-index: 2;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .about-photo-badge i {
-      font-size: 10px;
-    }
-
-    /* Карточкалар */
+    /* Card */
     .card {
       background: var(--bg-card);
       border-radius: var(--radius-lg);
       padding: 40px;
+      margin-bottom: 30px;
       box-shadow: var(--shadow);
       border: 1px solid rgba(255, 255, 255, 0.8);
-      margin-bottom: 30px;
-      transition: var(--transition);
       backdrop-filter: blur(10px);
       position: relative;
       overflow: hidden;
+      transition: var(--transition);
     }
-    
+
     .card::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
       height: 5px;
+      width: 100%;
       background: linear-gradient(to right, var(--primary), var(--secondary));
     }
-    
+
     .card:hover {
-      transform: translateY(-10px);
+      transform: translateY(-8px);
       box-shadow: var(--shadow-lg);
     }
-    
+
     .card-title {
       font-size: 28px;
       font-weight: 700;
+      font-family: 'Playfair Display', serif;
       margin-bottom: 10px;
       color: var(--text);
-      font-family: 'Playfair Display', serif;
     }
-    
+
     .card-subtitle {
       font-size: 16px;
       color: var(--text-light);
       margin-bottom: 25px;
     }
-    
-    /* "Мейрамханаға келіңіз" секциясы */
-    .visit-section {
-      text-align: center;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 250, 250, 0.95) 100%);
-      border-top: 1px solid rgba(0, 0, 0, 0.05);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-      padding: 60px 0;
-      margin: 40px 0;
-    }
-    
-    .visit-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 36px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 15px;
-    }
-    
-    .visit-subtitle {
-      font-size: 18px;
-      color: var(--text-light);
-      max-width: 700px;
-      margin: 0 auto 40px;
-    }
-    
-    .social-links {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-top: 30px;
-    }
-    
-    .social-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 18px 30px;
-      border-radius: var(--radius);
-      font-size: 16px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: var(--transition);
-      gap: 12px;
-      min-width: 200px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-    }
-    
-    .social-link.whatsapp {
-      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-      color: white;
-    }
-    
-    .social-link.instagram {
-      background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
-      color: white;
-    }
-    
-    .social-link.menu {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      color: white;
-    }
-    
-    .social-link:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-    }
-    
-    /* Формалар */
+
+    /* Form */
     .form-group {
       margin-top: 20px;
       margin-bottom: 25px;
     }
-    
+
     .form-label {
       display: block;
       font-size: 16px;
@@ -573,11 +309,11 @@
       margin-bottom: 10px;
       color: var(--text);
     }
-    
+
     .form-input-wrapper {
       position: relative;
     }
-    
+
     .form-input {
       width: 100%;
       padding: 18px 20px;
@@ -587,14 +323,14 @@
       transition: var(--transition);
       background: rgba(255, 255, 255, 0.9);
     }
-    
+
     .form-input:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 4px rgba(196, 30, 58, 0.1);
-      background: white;
+      background: #fff;
     }
-    
+
     .form-icon {
       position: absolute;
       right: 20px;
@@ -603,9 +339,10 @@
       color: var(--text-light);
       font-size: 18px;
     }
-    
-    /* Батырмалар */
-    .btn {
+
+    /* Buttons */
+    .btn,
+    .social-link {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -614,88 +351,50 @@
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      transition: var(--transition);
-      border: none;
       gap: 12px;
+      border: none;
+      text-decoration: none;
       position: relative;
       overflow: hidden;
-      text-decoration: none;
+      transition: var(--transition);
     }
-    
-    .btn::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 5px;
-      height: 5px;
-      background: rgba(255, 255, 255, 0.5);
-      opacity: 0;
-      border-radius: 100%;
-      transform: scale(1, 1) translate(-50%);
-      transform-origin: 50% 50%;
-    }
-    
-    .btn:focus:not(:active)::after {
-      animation: ripple 1s ease-out;
-    }
-    
-    @keyframes ripple {
-      0% {
-        transform: scale(0, 0);
-        opacity: 0.5;
-      }
-      100% {
-        transform: scale(20, 20);
-        opacity: 0;
-      }
-    }
-    
+
     .btn-primary {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      color: white;
+      color: #fff;
       box-shadow: 0 10px 20px rgba(196, 30, 58, 0.2);
     }
-    
+
     .btn-primary:hover {
       background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
       transform: translateY(-3px);
       box-shadow: 0 15px 25px rgba(196, 30, 58, 0.3);
     }
-    
-    .btn-secondary {
-      background: linear-gradient(135deg, var(--secondary) 0%, #B8860B 100%);
-      color: white;
-      box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
-    }
-    
-    .btn-secondary:hover {
-      background: linear-gradient(135deg, #E6C158 0%, var(--secondary) 100%);
-      transform: translateY(-3px);
-      box-shadow: 0 15px 25px rgba(212, 175, 55, 0.3);
-    }
-    
-    .btn-outline {
-      background: transparent;
-      border: 2px solid var(--primary);
-      color: var(--primary);
-    }
-    
-    .btn-outline:hover {
-      background: var(--primary);
-      color: white;
-    }
-    
+
     .btn[disabled] {
       opacity: 0.6;
       cursor: not-allowed;
-    }
-    
-    .btn[disabled]:hover {
       transform: none;
+      box-shadow: none;
     }
-    
-    /* Хабарламалар (toast) */
+
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      background-color: rgba(255, 255, 255, 0.6);
+      pointer-events: none;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(20);
+        opacity: 0;
+      }
+    }
+
+    /* Toast */
     .toast {
       margin-top: 20px;
       padding: 18px 20px;
@@ -706,25 +405,25 @@
       gap: 12px;
       animation: fadeIn 0.5s ease;
     }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
+
     .toast-success {
       background: rgba(42, 157, 143, 0.1);
       color: var(--accent);
       border: 1px solid rgba(42, 157, 143, 0.2);
     }
-    
+
     .toast-error {
       background: rgba(196, 30, 58, 0.1);
       color: var(--primary);
       border: 1px solid rgba(196, 30, 58, 0.2);
     }
-    
-    /* Аккордеон */
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Accordion */
     .accordion {
       border-radius: var(--radius-lg);
       border: 1px solid rgba(255, 255, 255, 0.8);
@@ -732,14 +431,14 @@
       margin-bottom: 25px;
       overflow: hidden;
       box-shadow: var(--shadow);
-      transition: var(--transition);
       backdrop-filter: blur(10px);
+      transition: var(--transition);
     }
-    
+
     .accordion:hover {
       box-shadow: var(--shadow-lg);
     }
-    
+
     .accordion-header {
       padding: 25px 30px;
       background: rgba(255, 255, 255, 0.9);
@@ -750,161 +449,156 @@
       font-weight: 700;
       font-size: 20px;
       color: var(--text);
-      transition: var(--transition);
     }
-    
-    .accordion-header:hover {
-      background: rgba(255, 255, 255, 1);
-    }
-    
+
     .accordion-body {
       padding: 30px;
       border-top: 1px solid rgba(0, 0, 0, 0.05);
       display: none;
       animation: slideDown 0.4s ease;
     }
-    
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
+
     .accordion.open .accordion-body {
       display: block;
     }
-    
+
     .accordion-icon {
       transition: var(--transition);
       color: var(--primary);
     }
-    
+
     .accordion.open .accordion-icon {
       transform: rotate(180deg);
     }
-    
-    /* Қонақ туралы ақпарат */
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* User info */
     .user-info-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 20px;
     }
-    
+
     .info-card {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(250, 250, 250, 0.9) 100%);
+      background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(250,250,250,0.9) 100%);
       border-radius: var(--radius);
       padding: 25px;
-      border: 1px solid rgba(0, 0, 0, 0.05);
-      transition: var(--transition);
+      border: 1px solid rgba(0,0,0,0.05);
       position: relative;
       overflow: hidden;
+      transition: var(--transition);
     }
-    
+
     .info-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
     }
-    
+
     .info-card::before {
       content: '';
       position: absolute;
-      top: 0;
       left: 0;
+      top: 0;
       width: 5px;
       height: 100%;
       background: linear-gradient(to bottom, var(--primary), var(--secondary));
     }
-    
+
     .info-label {
       font-size: 14px;
       color: var(--text-light);
       margin-bottom: 8px;
       font-weight: 500;
     }
-    
+
     .info-value {
       font-size: 24px;
       font-weight: 700;
       color: var(--text);
       line-height: 1.2;
     }
-    
-    /* Сыйлықтар */
+
+    /* Gifts */
     .gift-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 25px;
     }
-    
+
     .gift-card {
       border-radius: var(--radius-lg);
-      border: 1px solid rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(0,0,0,0.05);
       overflow: hidden;
-      background: white;
+      background: #fff;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
       position: relative;
       transition: var(--transition);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     }
-    
+
     .gift-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
     }
-    
+
     .gift-image {
       width: 100%;
       height: 180px;
-      object-fit: cover;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain; /* показывает фото полностью */
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--text-light);
       position: relative;
     }
-    
+
     .gift-image i {
       font-size: 60px;
-      color: rgba(0, 0, 0, 0.1);
+      color: rgba(0,0,0,0.1);
     }
-    
+
     .gift-content {
       padding: 25px;
     }
-    
+
     .gift-title {
       font-size: 18px;
       font-weight: 700;
       margin-bottom: 10px;
       color: var(--text);
     }
-    
+
     .gift-price {
       font-size: 16px;
       color: var(--primary);
       margin-bottom: 8px;
       font-weight: 600;
     }
-    
+
     .gift-left {
       font-size: 14px;
       color: var(--text-light);
       margin-bottom: 15px;
     }
-    
+
     .gift-out {
       position: absolute;
       top: 15px;
       right: 15px;
       padding: 6px 15px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255,255,255,0.95);
       color: var(--primary);
       font-size: 12px;
       font-weight: 700;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(10px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
-    
+
     .gift-badge {
       position: absolute;
       top: 15px;
@@ -912,61 +606,68 @@
       padding: 5px 12px;
       border-radius: 999px;
       background: var(--secondary);
-      color: white;
-      font-size: 12px;
+      color: #fff;
+      font-size: 9px;
       font-weight: 700;
+      z-index: 1000;
     }
-    
-    /* Админге сілтеме */
-    .link-admin {
-      font-size: 15px;
-      color: var(--text-light);
-      text-align: right;
-    }
-    
-    .link-admin a {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
-      transition: var(--transition);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .link-admin a:hover {
-      color: var(--primary-dark);
-      text-decoration: underline;
-    }
-    
-    /* Футер */
-    .app-footer {
-      margin-top: 60px;
-      padding: 40px 0;
-      border-top: 1px solid rgba(0, 0, 0, 0.05);
+
+    /* Visit section */
+    .visit-section {
       text-align: center;
-      color: var(--text-light);
-      font-size: 14px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(250,250,250,0.95) 100%);
+      border-block: 1px solid rgba(0,0,0,0.05);
+      padding: 60px 0;
+      margin: 40px 0;
     }
-    
-    .footer-links {
+
+    .visit-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 15px;
+    }
+
+    .visit-subtitle {
+      font-size: 18px;
+      color: var(--text-light);
+      max-width: 700px;
+      margin: 0 auto 40px;
+    }
+
+    .social-links {
       display: flex;
       justify-content: center;
-      gap: 30px;
-      margin-top: 20px;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 30px;
     }
-    
-    .footer-links a {
-      color: var(--text-light);
-      text-decoration: none;
-      transition: var(--transition);
+
+    .social-link.whatsapp {
+      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+      color: #fff;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
     }
-    
-    .footer-links a:hover {
-      color: var(--primary);
+
+    .social-link.instagram {
+      background: linear-gradient(45deg,#405DE6,#5851DB,#833AB4,#C13584,#E1306C,#FD1D1D);
+      color: #fff;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
     }
-    
-    /* Контакт ақпараты */
+
+    .social-link.menu {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: #fff;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    .social-link:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    /* Contacts */
     .contact-info {
       display: flex;
       flex-wrap: wrap;
@@ -975,20 +676,20 @@
       margin: 40px 0;
       text-align: center;
     }
-    
+
     .contact-item {
+      min-width: 200px;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 10px;
-      min-width: 200px;
     }
-    
+
     .contact-icon {
       width: 60px;
       height: 60px;
       border-radius: 50%;
-      background: linear-gradient(135deg, rgba(196, 30, 58, 0.1) 0%, rgba(212, 175, 55, 0.1) 100%);
+      background: linear-gradient(135deg, rgba(196,30,58,0.1) 0%, rgba(212,175,55,0.1) 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -996,423 +697,307 @@
       font-size: 24px;
       margin-bottom: 10px;
     }
-    
+
     .contact-text {
       font-size: 16px;
       color: var(--text);
     }
-    
+
     .contact-detail {
       font-size: 14px;
       color: var(--text-light);
     }
-    
-    /* Скроллмен шығатын анимация */
+
+    .contact-detail a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .contact-detail a:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    .app-footer {
+      margin-top: 60px;
+      padding: 40px 0;
+      border-top: 1px solid rgba(0,0,0,0.05);
+      text-align: center;
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-light);
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 14px;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+
+    /* Scroll animation */
     .animate-on-scroll {
       opacity: 0;
       transform: translateY(30px);
       transition: opacity 0.8s ease, transform 0.8s ease;
     }
-    
+
     .animate-on-scroll.visible {
       opacity: 1;
       transform: translateY(0);
     }
-    
-    /* Адаптивтілік */
+
+    /* Responsive */
     @media (max-width: 992px) {
-      .hero-title {
-        font-size: 38px;
-      }
-      
-      .hero-subtitle {
-        font-size: 18px;
-      }
-      
-      .visit-title {
-        font-size: 32px;
-      }
-      
-      .card {
-        padding: 30px;
-      }
-      
-      .social-link {
-        min-width: 180px;
-      }
-
-      .about-section {
-        grid-template-columns: 1fr;
-        gap: 24px;
-      }
-
-      .about-photos {
-        grid-template-rows: repeat(2, 140px);
-      }
+      .hero-title { font-size: 38px; }
+      .hero-subtitle { font-size: 18px; }
+      .visit-title { font-size: 32px; }
+      .card { padding: 30px; }
     }
-    
+
     @media (max-width: 768px) {
-      .hero-title {
-        font-size: 32px;
-      }
-      
       .app-header {
         flex-direction: column;
-        gap: 20px;
+        align-items: flex-start;
       }
-      
-      .link-admin {
-        text-align: center;
-      }
-      
-      .user-info-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .gift-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .visit-title {
-        font-size: 28px;
-      }
-      
+
+      .hero-title { font-size: 32px; }
+      .visit-title { font-size: 28px; }
+
       .social-links {
         flex-direction: column;
         align-items: center;
       }
-      
+
       .social-link {
         width: 100%;
-        max-width: 300px;
+        max-width: 320px;
       }
-      
-      .contact-info {
-        flex-direction: column;
-        align-items: center;
-        gap: 30px;
-      }
-      
+
       .footer-links {
         flex-direction: column;
         gap: 15px;
       }
 
-      .about-text-card {
-        padding: 26px 22px;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .hero-title {
-        font-size: 28px;
-      }
-      
-      .hero-subtitle {
-        font-size: 16px;
-      }
-      
-      .visit-title {
-        font-size: 24px;
-      }
-      
-      .visit-subtitle {
-        font-size: 16px;
-      }
-      
-      .card {
-        padding: 25px 20px;
-      }
-      
-      .btn, .social-link {
-        padding: 16px 24px;
+      .header-right {
         width: 100%;
+        justify-content: space-between;
       }
 
-      .about-photos {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: repeat(2, 110px);
+      .link-admin {
+        text-align: left;
+      }
+
+      .user-info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gift-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title { font-size: 28px; }
+      .hero-subtitle { font-size: 16px; }
+      .visit-title { font-size: 24px; }
+      .visit-subtitle { font-size: 16px; }
+      .card { padding: 25px 20px; }
+
+      .btn,
+      .social-link {
+        width: 100%;
+        padding: 16px 24px;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Анимирленген фон (бөлшектер) -->
   <div class="bg-animated" id="bg-animated"></div>
   <div class="top-gradient"></div>
-  
+
   <div class="app-container">
     <header class="app-header animate-on-scroll">
       <a href="#" class="restaurant-logo">
         <div class="logo-img">
-          <img src="logo.png" alt="">
+          <img src="logo.png" alt="Habi Logo">
         </div>
         <div class="logo-text">
           <div class="logo-main">HABI</div>
-          <div class="logo-sub">CAFE & HOGO</div>
+          <div class="logo-sub">CAFE &amp; HOGO</div>
         </div>
       </a>
-      
-      <div class="link-admin">
-        <a href="admin.html"><i class="fas fa-lock"></i> Қызметкерлер үшін кіру</a>
+
+      <div class="header-right">
+        <div class="lang-switch" aria-label="Language switch">
+          <button class="lang-btn" data-lang="kk">KZ</button>
+          <button class="lang-btn" data-lang="ru">RU</button>
+          <button class="lang-btn" data-lang="zh">中文</button>
+        </div>
+        <div class="link-admin">
+          <a href="admin.html" data-i18n="admin">
+            <i class="fas fa-lock"></i>
+            <span data-i18n="admin-link-text"></span>
+          </a>
+        </div>
       </div>
     </header>
-    
+
     <section class="hero-section animate-on-scroll">
-      <h1 class="hero-title"><span>Бонус жүйесі</span> — Habi <br> Cafe & Hogo</h1>
-      <p class="hero-subtitle">
-        Бонус теңгеріміңізді көріңіз, сыйлықтарыңызды қадағалаңыз және эксклюзивті ұсыныстар алыңыз.
-        Біздің кафеге келген кезде қалдырған телефон нөміріңізді енгізіңіз.
-      </p>
+      <h1 class="hero-title" data-i18n="hero-title"></h1>
+      <p class="hero-subtitle" data-i18n="hero-subtitle"></p>
     </section>
 
-    <!-- РЕСТОРАН ТУРАЛЫ СЕКЦИЯ -->
-    <!-- <section class="about-section animate-on-scroll">
-      <div class="about-text-card">
-        <div class="about-kicker">
-          <i class="fas fa-circle"></i>
-          Премиум кеңістік & сервис
-        </div>
-        <h2 class="about-title">Habi мейрамханасы — авторлық асүй, стильді интерьер және жылы қарсы алуды 
-          біріктіретін кеңістік.</h2>
-        <div class="about-highlights">
-          <div class="about-pill">
-            <i class="fas fa-wine-glass-alt"></i>
-            Авторлық сусындар мен десерттер
-          </div>
-          <div class="about-pill">
-            <i class="fas fa-music"></i>
-            Жұмсақ музыка және lounge атмосфера
-          </div>
-          <div class="about-pill">
-            <i class="fas fa-chair"></i>
-            Ыңғайлы отыратын аймақтар
-          </div>
-          <div class="about-pill">
-            <i class="fas fa-birthday-cake"></i>
-            Мерекелер мен банкеттерге арналған формат
-          </div>
-        </div>
-        <div class="about-meta">
-          <div class="about-meta-item">
-            <div class="about-meta-label">Орналасқан жері</div>
-            <div class="about-meta-value">Алматы, қаланың орталық аймағы</div>
-          </div>
-          <div class="about-meta-item">
-            <div class="about-meta-label">Формат</div>
-            <div class="about-meta-value">Restaurant & lounge</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="about-photos">
-        <div class="about-photo-card big small-label" style="background-image:url('/img/habi-hall.jpg');">
-          <div class="about-photo-badge">
-            <i class="fas fa-star"></i>
-            Main hall
-          </div>
-        </div>
-        <div class="about-photo-card table-label" style="background-image:url('/img/habi-table.jpg');"></div>
-        <div class="about-photo-card bar-label" style="background-image:url('/img/habi-bar.jpg');"></div>
-      </div>
-    </section> -->
-    
     <section class="card animate-on-scroll">
-      <h2 class="card-title">Бонусыңызды тексеріңіз</h2>
-      <p class="card-subtitle">1000-нан астам қонақ Habi бонус бағдарламасын қолданып, сыйлықтар алып отыр</p>
-      
+      <h2 class="card-title" data-i18n="card-check-title"></h2>
+      <p class="card-subtitle" data-i18n="card-check-subtitle"></p>
+
       <div class="form-group">
-        <label class="form-label">Телефон нөмірі</label>
+        <label class="form-label" data-i18n="label-phone"></label>
         <div class="form-input-wrapper">
-          <input type="text" class="form-input" id="user-phone" placeholder="+7 777 000 00 00">
+          <input
+            type="text"
+            class="form-input"
+            id="user-phone"
+            data-i18n-placeholder="placeholder-phone"
+          >
           <i class="fas fa-phone form-icon"></i>
         </div>
       </div>
-      
+
       <button class="btn btn-primary" id="btn-user-login">
-        <i class="fas fa-sign-in-alt"></i> Бонустарымды табу
+        <i class="fas fa-sign-in-alt"></i>
+        <span data-i18n="btn-find-bonuses"></span>
       </button>
-      
-      <div id="u-toast" class="toast"></div>
+
+      <div id="u-toast" class="toast" style="display:none;"></div>
     </section>
-    
+
     <section class="accordion animate-on-scroll" id="acc-status">
       <div class="accordion-header">
-        <span><i class="fas fa-crown" style="color: var(--secondary); margin-right: 10px;"></i> Менің мәртебем және балансым</span>
+        <span>
+          <i class="fas fa-crown" style="color: var(--secondary); margin-right:10px;"></i>
+          <span data-i18n="acc-status-title"></span>
+        </span>
         <i class="fas fa-chevron-down accordion-icon"></i>
       </div>
       <div class="accordion-body">
         <div id="user-info"></div>
       </div>
     </section>
-    
+
     <section class="accordion animate-on-scroll" id="acc-gifts">
       <div class="accordion-header">
-        <span><i class="fas fa-gift" style="color: var(--primary); margin-right: 10px;"></i> Қолжетімді сыйлықтар</span>
+        <span>
+          <i class="fas fa-gift" style="color: var(--primary); margin-right:10px;"></i>
+          <span data-i18n="acc-gifts-title"></span>
+        </span>
         <i class="fas fa-chevron-down accordion-icon"></i>
       </div>
       <div class="accordion-body">
-        <p class="card-subtitle" style="margin-bottom:20px;">
-          Кәдімгі және банкет бонустары бөлек есептеледі. Әр сыйлық осы екі түрдің біріне байланыстырылған болуы мүмкін.
-        </p>
+        <p class="card-subtitle" style="margin-bottom:20px;" data-i18n="gifts-note"></p>
         <div id="user-gifts" class="gift-grid"></div>
       </div>
     </section>
-    
-    <!-- "Мейрамханаға келіңіз" секциясы -->
+
     <section class="visit-section animate-on-scroll">
-      <h2 class="visit-title">Habi Cafe & Hogo келіңіз</h2>
-      <p class="visit-subtitle">
-        Біз сізді жайлы атмосферада күтеміз. Үстел брондаңыз, онлайн-менюді көріңіз
-        немесе сұрақтарыңызды қойыңыз.
-      </p>
-      
+      <h2 class="visit-title" data-i18n="visit-title"></h2>
+      <p class="visit-subtitle" data-i18n="visit-subtitle"></p>
+
       <div class="social-links">
         <a href="https://wa.me/77068706666" class="social-link whatsapp" target="_blank">
-          <i class="fab fa-whatsapp"></i> WhatsApp арқылы жазу
+          <i class="fab fa-whatsapp"></i>
+          <span data-i18n="btn-whatsapp"></span>
         </a>
         <a href="https://www.instagram.com/habi.cafe.hogo/" class="social-link instagram" target="_blank">
-          <i class="fab fa-instagram"></i> Instagram парақшасы
+          <i class="fab fa-instagram"></i>
+          <span data-i18n="btn-instagram"></span>
         </a>
         <a href="https://menu-online.co/habihogo/webstore/welcome" class="social-link menu" target="_blank">
-          <i class="fas fa-utensils"></i> Онлайн-меню жеткізу қызметі
+          <i class="fas fa-utensils"></i>
+          <span data-i18n="btn-menu"></span>
         </a>
       </div>
-      
+
       <div class="contact-info">
         <div class="contact-item">
           <div class="contact-icon">
             <i class="fas fa-map-marker-alt"></i>
           </div>
-          <div class="contact-text">Мекенжай</div>
-          <div class="contact-detail"><a href="https://2gis.kz/almaty/geo/70000001104066859">2GIS </a>Алматы, Жунисова 137/31</div>
+          <div class="contact-text" data-i18n="contact-address-title"></div>
+          <div class="contact-detail">
+            <a href="https://2gis.kz/almaty/geo/70000001104066859" target="_blank">2GIS</a>
+            <span data-i18n="contact-address-text"></span>
+          </div>
         </div>
-        
+
         <div class="contact-item">
           <div class="contact-icon">
             <i class="fas fa-phone"></i>
           </div>
-          <div class="contact-text">Телефон</div>
+          <div class="contact-text" data-i18n="contact-phone-title"></div>
           <div class="contact-detail">+7 706 870 6666</div>
         </div>
-        
+
         <div class="contact-item">
           <div class="contact-icon">
             <i class="fas fa-clock"></i>
           </div>
-          <div class="contact-text">Жұмыс уақыты</div>
-          <div class="contact-detail">Күн сайын 10:00 – 23:00</div>
+          <div class="contact-text" data-i18n="contact-hours-title"></div>
+          <div class="contact-detail" data-i18n="contact-hours-text"></div>
         </div>
       </div>
     </section>
-    
+
     <footer class="app-footer animate-on-scroll">
-      <p>© 2025 Habi Cafe & Hogo. Барлық құқықтар қорғалған.</p>
+      <p data-i18n="footer-copy"></p>
       <p>+7 706 870 6666</p>
-      
       <div class="footer-links">
-        <a href="#"><i class="fas fa-info-circle"></i> Habi cafe туралы</a>
-        <a href="#"><i class="fas fa-concierge-bell"></i> Меню</a>
-        <a href="#"><i class="fas fa-calendar-alt"></i> Үстел брондау</a>
-        <a href="#"><i class="fas fa-question-circle"></i> Көмек</a>
+        <a href="#" data-i18n="footer-about"></a>
+        <a href="#" data-i18n="footer-menu"></a>
+        <a href="#" data-i18n="footer-booking"></a>
+        <a href="#" data-i18n="footer-help"></a>
       </div>
     </footer>
   </div>
 
   <script>
-    /* Apps Script URL-і */
-    const API_BASE = 'https://script.google.com/macros/s/AKfycbxkyjMArpTcCEOLR73rkllZGIAFPxddb9k3VuVpCic4pSFKEoJHn4_95BKb96u2QY6PqA/exec';
+    /* === CONFIG & HELPERS === */
 
-    const $ = s => document.querySelector(s);
-    const $$ = s => document.querySelectorAll(s);
+    const API_BASE =
+      'https://script.google.com/macros/s/AKfycbxkyjMArpTcCEOLR73rkllZGIAFPxddb9k3VuVpCic4pSFKEoJHn4_95BKb96u2QY6PqA/exec';
 
-    const el = (t,a={},c=[])=>{
-      const n=document.createElement(t);
-      for(const k in a){
-        if(k==='class') n.className=a[k];
-        else if(k==='html') n.innerHTML=a[k];
-        else n.setAttribute(k,a[k]);
+    const $  = (s) => document.querySelector(s);
+    const $$ = (s) => document.querySelectorAll(s);
+
+    const el = (t, a = {}, c = []) => {
+      const n = document.createElement(t);
+      for (const k in a) {
+        if (k === 'class') n.className = a[k];
+        else if (k === 'html') n.innerHTML = a[k];
+        else n.setAttribute(k, a[k]);
       }
-      (Array.isArray(c)?c:[c]).filter(Boolean).forEach(x=>n.append(x));
+      (Array.isArray(c) ? c : [c]).filter(Boolean).forEach((x) => n.append(x));
       return n;
     };
 
-    // Фонға анимирленген бөлшектер қосу
-    function createParticles() {
-      const bg = $('#bg-animated');
-      const particleCount = 30;
-      
-      for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-        
-        // Кездейсоқ өлшем мен позиция
-        const size = Math.random() * 100 + 20;
-        const left = Math.random() * 100;
-        const top = Math.random() * 100;
-        const delay = Math.random() * 20;
-        
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        particle.style.left = `${left}%`;
-        particle.style.top = `${top}%`;
-        particle.style.animationDelay = `${delay}s`;
-        particle.style.opacity = Math.random() * 0.1 + 0.05;
-        
-        // Бояу палитрасы
-        const colors = [
-          'rgba(196, 30, 58, 0.03)',
-          'rgba(212, 175, 55, 0.03)',
-          'rgba(42, 157, 143, 0.03)'
-        ];
-        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        
-        bg.appendChild(particle);
-      }
-    }
-    
-    // Скролл кезінде блоктардың әдемі шығуы
-    function initScrollAnimation() {
-      const elements = $$('.animate-on-scroll');
-      
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      }, { threshold: 0.1 });
-      
-      elements.forEach(el => observer.observe(el));
-    }
-    
-    // Батырмаларға "ripple" анимациясы
-    function initButtonRipple() {
-      $$('.btn, .social-link').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          const x = e.clientX - e.target.getBoundingClientRect().left;
-          const y = e.clientY - e.target.getBoundingClientRect().top;
-          
-          const ripple = document.createElement('span');
-          ripple.style.left = x + 'px';
-          ripple.style.top = y + 'px';
-          ripple.classList.add('ripple');
-          
-          this.appendChild(ripple);
-          
-          setTimeout(() => {
-            ripple.remove();
-          }, 600);
-        });
-      });
-    }
-
-    function normPhone(p){
-      p = String(p || '').replace(/[^\d+]/g,'');
-      if(p.startsWith('+7')) return p;
-      if(p.startsWith('8') && p.length===11) return '+7'+p.slice(1);
-      if(p.length===10) return '+7'+p;
-      if(p.length===11 && p[0]==='7') return '+'+p;
+    function normPhone(raw) {
+      let p = String(raw || '').replace(/[^\d+]/g, '');
+      if (p.startsWith('+7')) return p;
+      if (p.startsWith('8') && p.length === 11) return '+7' + p.slice(1);
+      if (p.length === 10) return '+7' + p;
+      if (p.length === 11 && p[0] === '7') return '+' + p;
       return p;
     }
 
@@ -1420,109 +1005,466 @@
       if (!url) return '';
       url = String(url).trim();
       if (!url) return '';
-      
+
       if (url.startsWith('data:image')) return url;
-      
+
       if (url.startsWith('=IMAGE("')) {
         url = url.replace(/^=IMAGE\("(.*?)"\)$/i, '$1');
         url = url.replace(/^["']+|["']+$/g, '');
       }
-      
+
       let fileId = '';
       let match = url.match(/drive\.usercontent\.google\.com\/download\?id=([a-zA-Z0-9_-]+)/);
       if (match) fileId = match[1];
-      
+
       if (!fileId) match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
       if (match && !fileId) fileId = match[1];
-      
+
       if (!fileId) match = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
       if (match && !fileId) fileId = match[1];
-      
+
       if (!fileId) match = url.match(/drive\.google\.com\/uc\?id=([a-zA-Z0-9_-]+)/);
       if (match && !fileId) fileId = match[1];
-      
+
       if (!fileId && /^[a-zA-Z0-9_-]{25,}$/.test(url)) fileId = url;
-      
+
       if (fileId) return `https://lh3.googleusercontent.com/d/${fileId}=s1000?authuser=0`;
-      
+
       if (/^https?:\/\/.*\.(jpg|jpeg|png|gif|webp|bmp|svg)(\?.*)?$/i.test(url)) return url;
-      
+
       if (url.startsWith('http')) return url;
-      
+
       return '';
     }
 
-    function toast(node,msg,ok=true){
-      if(!node) return;
-      node.className = 'toast ' + (ok?'toast-success':'toast-error');
-      node.innerHTML = ok
-        ? `<i class="fas fa-check-circle"></i> ${msg}`
-        : `<i class="fas fa-exclamation-circle"></i> ${msg}`;
-      setTimeout(()=>{ if(node.innerHTML.includes(msg)) node.innerHTML=''; },4000);
-    }
-
-    async function api(action, body={}, method='POST'){
-      const params = new URLSearchParams({action, ...body});
-      let res;
-      if(method === 'GET'){
-        res = await fetch(`${API_BASE}?${params.toString()}`, {method:'GET'});
-      }else{
-        res = await fetch(API_BASE, {
-          method:'POST',
-          headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
-          body: params.toString()
-        });
-      }
-      const data = await res.json().catch(()=>({ok:false,error:'JSON parse error'}));
-      if(!data.ok) throw new Error(data.error || 'Сұрауды орындау кезінде қате пайда болды');
-      return data;
-    }
-
-    function formatMoney(x){
-      x = Number(x||0);
+    function formatMoney(x) {
+      x = Number(x || 0);
       return x.toLocaleString('ru-RU') + ' ₸';
     }
 
+    function showToast(node, msg, ok = true) {
+      if (!node) return;
+      node.style.display = 'flex';
+      node.className = 'toast ' + (ok ? 'toast-success' : 'toast-error');
+      node.innerHTML = ok
+        ? `<i class="fas fa-check-circle"></i>${msg}`
+        : `<i class="fas fa-exclamation-circle"></i>${msg}`;
+      setTimeout(() => {
+        if (node.innerHTML.includes(msg)) {
+          node.style.display = 'none';
+          node.innerHTML = '';
+        }
+      }, 4000);
+    }
+
+    async function api(action, body = {}, method = 'POST') {
+      const params = new URLSearchParams({ action, ...body });
+      let res;
+
+      if (method === 'GET') {
+        res = await fetch(`${API_BASE}?${params.toString()}`, { method: 'GET' });
+      } else {
+        res = await fetch(API_BASE, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+          body: params.toString()
+        });
+      }
+
+      const data = await res.json().catch(() => ({ ok: false, error: 'JSON parse error' }));
+      if (!data.ok) throw new Error(data.error || 'Request error');
+      return data;
+    }
+
+    /* === i18n === */
+
+    const translations = {
+      kk: {
+        'doc-title': 'Habi Cafe & Hogo — Қонақ кабинеті',
+        'admin-link-text': 'Қызметкерлер үшін кіру',
+
+        'hero-title': '<span>Бонус жүйесі</span> — Habi <br> Cafe &amp; Hogo',
+        'hero-subtitle':
+          'Бонус теңгеріміңізді көріңіз, сыйлықтарыңызды қадағалаңыз және эксклюзивті ұсыныстар алыңыз. Біздің кафеге келген кезде қалдырған телефон нөміріңізді енгізіңіз.',
+
+        'card-check-title': 'Бонусыңызды тексеріңіз',
+        'card-check-subtitle':
+          '1000-нан астам қонақ Habi бонус бағдарламасын қолданып, сыйлықтар алып отыр.',
+        'label-phone': 'Телефон нөмірі',
+        'placeholder-phone': '+7 777 000 00 00',
+        'btn-find-bonuses': 'Бонустарымды табу',
+
+        'acc-status-title': 'Менің мәртебем және балансым',
+        'acc-gifts-title': 'Қолжетімді сыйлықтар',
+        'gifts-note':
+          'Кәдімгі және банкет бонустары бөлек есептеледі. Әр сыйлық осы екі түрдің біріне байланыстырылған болуы мүмкін.',
+
+        'visit-title': 'Habi Cafe &amp; Hogo келіңіз',
+        'visit-subtitle':
+          'Жайлы атмосферада күтеміз. Үстел брондаңыз, онлайн-менюді қарап шығыңыз немесе сұрақтарыңызды қойыңыз.',
+        'btn-whatsapp': 'WhatsApp арқылы жазу',
+        'btn-instagram': 'Instagram парақшасы',
+        'btn-menu': 'Онлайн-меню және жеткізу',
+
+        'contact-address-title': 'Мекенжай',
+        'contact-address-text': ' Алматы, Жунисова 137/31',
+        'contact-phone-title': 'Телефон',
+        'contact-hours-title': 'Жұмыс уақыты',
+        'contact-hours-text': 'Күн сайын 10:00 – 23:00',
+
+        'footer-copy': '© 2025 Habi Cafe &amp; Hogo. Барлық құқықтар қорғалған.',
+        'footer-about': 'Habi cafe туралы',
+        'footer-menu': 'Меню',
+        'footer-booking': 'Үстел брондау',
+        'footer-help': 'Көмек',
+
+        'toast-invalid-phone': 'Дұрыс телефон нөмірін енгізіңіз.',
+        'toast-not-found':
+          'Қонақ табылмады. Нөмірді тексеріңіз немесе әкімшіге жүгініңіз.',
+        'toast-welcome': 'Қош келдіңіз, {name}! Бонус деректеріңіз жүктелді.',
+
+        'user-name-label': 'Қонақтың аты',
+        'user-default-name': 'Қонақ',
+        'user-sum-label': 'Барлық чек сомасы',
+        'user-sum-detail':
+          'Кәдімгі: {normal}<br>Банкеттік: {banquet}',
+        'user-balance-label': 'Бонус балансы',
+        'user-balance-detail':
+          'Кәдімгі бонустар: {normal}<br>Банкеттік бонустар: {banquet}',
+        'user-gifts-label': 'Алынған сыйлықтар',
+        'user-gifts-empty': 'Әзірге сыйлықтар жоқ',
+
+        'gift-type-normal': 'Кәдімгі бонустар',
+        'gift-type-banquet': 'Банкеттік бонустар',
+        'gift-out-of-stock': 'Қоймада жоқ',
+        'gift-status-out': 'Бұл сыйлық әзірге қолжетімсіз.',
+        'gift-status-enough': 'Сізде бұл сыйлыққа жеткілікті бонус бар! Әкімшіге жүгініңіз.',
+        'gift-status-not-enough':
+          'Бонустар жеткіліксіз. Тағы шамамен {amount} жинау қажет.',
+
+        'gifts-empty':
+          'Қазіргі уақытта қолжетімді сыйлықтар жоқ. Кейінірек қайта қарап көріңіз.'
+      },
+
+      ru: {
+        'doc-title': 'Habi Cafe & Hogo — Кабинет гостя',
+        'admin-link-text': 'Вход для персонала',
+
+        'hero-title': '<span>Бонусная система</span> — Habi <br> Cafe &amp; Hogo',
+        'hero-subtitle':
+          'Проверьте баланс бонусов, отслеживайте подарки и получайте эксклюзивные предложения. Введите номер телефона, который вы оставляли при посещении нашего кафе.',
+
+        'card-check-title': 'Проверьте свои бонусы',
+        'card-check-subtitle':
+          'Более 1000 гостей уже используют бонусную программу Habi и получают подарки.',
+        'label-phone': 'Номер телефона',
+        'placeholder-phone': '+7 777 000 00 00',
+        'btn-find-bonuses': 'Найти мои бонусы',
+
+        'acc-status-title': 'Мой статус и баланс',
+        'acc-gifts-title': 'Доступные подарки',
+        'gifts-note':
+          'Обычные и банкетные бонусы учитываются отдельно. Каждый подарок привязан к одному из этих типов.',
+
+        'visit-title': 'Добро пожаловать в Habi Cafe &amp; Hogo',
+        'visit-subtitle':
+          'Мы ждём вас в уютной атмосфере. Забронируйте стол, посмотрите онлайн-меню или задайте вопрос.',
+        'btn-whatsapp': 'Написать в WhatsApp',
+        'btn-instagram': 'Страница в Instagram',
+        'btn-menu': 'Онлайн-меню и доставка',
+
+        'contact-address-title': 'Адрес',
+        'contact-address-text': ' Алматы, Жунисова 137/31',
+        'contact-phone-title': 'Телефон',
+        'contact-hours-title': 'Время работы',
+        'contact-hours-text': 'Каждый день с 10:00 до 23:00',
+
+        'footer-copy': '© 2025 Habi Cafe &amp; Hogo. Все права защищены.',
+        'footer-about': 'О Habi cafe',
+        'footer-menu': 'Меню',
+        'footer-booking': 'Бронирование столов',
+        'footer-help': 'Помощь',
+
+        'toast-invalid-phone': 'Введите корректный номер телефона.',
+        'toast-not-found':
+          'Гость не найден. Проверьте номер или обратитесь к администратору.',
+        'toast-welcome': 'Добро пожаловать, {name}! Данные по бонусам загружены.',
+
+        'user-name-label': 'Имя гостя',
+        'user-default-name': 'Гость',
+        'user-sum-label': 'Общая сумма чеков',
+        'user-sum-detail':
+          'Обычные: {normal}<br>Банкетные: {banquet}',
+        'user-balance-label': 'Бонусный баланс',
+        'user-balance-detail':
+          'Обычные бонусы: {normal}<br>Банкетные бонусы: {banquet}',
+        'user-gifts-label': 'Полученные подарки',
+        'user-gifts-empty': 'Пока нет полученных подарков.',
+
+        'gift-type-normal': 'Обычные бонусы',
+        'gift-type-banquet': 'Банкетные бонусы',
+        'gift-out-of-stock': 'Нет в наличии',
+        'gift-status-out': 'Этот подарок временно недоступен.',
+        'gift-status-enough':
+          'У вас достаточно бонусов для этого подарка! Обратитесь к администратору.',
+        'gift-status-not-enough':
+          'Недостаточно бонусов. Нужно накопить ещё примерно {amount}.',
+
+        'gifts-empty':
+          'Сейчас нет доступных подарков. Попробуйте заглянуть позже.'
+      },
+
+      zh: {
+        'doc-title': 'Habi Cafe & Hogo — 顾客积分中心',
+        'admin-link-text': '员工入口',
+
+        'hero-title': '<span>积分奖励系统</span> — Habi <br> Cafe &amp; Hogo',
+        'hero-subtitle':
+          '查看您的积分余额，跟踪可兑换礼品，并获取专属优惠。请输入您在本咖啡馆留下的手机号码。',
+
+        'card-check-title': '查询您的积分',
+        'card-check-subtitle':
+          '超过 1000 名顾客已经使用 Habi 积分计划并领取礼品。',
+        'label-phone': '手机号码',
+        'placeholder-phone': '+7 777 000 00 00',
+        'btn-find-bonuses': '查询积分',
+
+        'acc-status-title': '我的等级与余额',
+        'acc-gifts-title': '可用礼品',
+        'gifts-note':
+          '普通积分与宴会积分分别计算，每个礼品只绑定其中一种积分类型。',
+
+        'visit-title': '欢迎光临 Habi Cafe &amp; Hogo',
+        'visit-subtitle':
+          '在温馨的氛围中等您到来。您可以预约餐位、查看线上菜单或咨询问题。',
+        'btn-whatsapp': '通过 WhatsApp 聊天',
+        'btn-instagram': 'Instagram 页面',
+        'btn-menu': '线上菜单与外送',
+
+        'contact-address-title': '地址',
+        'contact-address-text': ' 阿拉木图市，Жунисова 137/31',
+        'contact-phone-title': '电话',
+        'contact-hours-title': '营业时间',
+        'contact-hours-text': '每天 10:00 – 23:00',
+
+        'footer-copy': '© 2025 Habi Cafe &amp; Hogo. 版权所有。',
+        'footer-about': '关于 Habi cafe',
+        'footer-menu': '菜单',
+        'footer-booking': '预订餐位',
+        'footer-help': '帮助',
+
+        'toast-invalid-phone': '请输入正确的手机号码。',
+        'toast-not-found':
+          '未找到顾客。请检查号码或联系管理员。',
+        'toast-welcome': '欢迎您，{name}！您的积分数据已加载。',
+
+        'user-name-label': '顾客姓名',
+        'user-default-name': '顾客',
+        'user-sum-label': '消费总金额',
+        'user-sum-detail':
+          '普通：{normal}<br>宴会：{banquet}',
+        'user-balance-label': '积分余额',
+        'user-balance-detail':
+          '普通积分：{normal}<br>宴会积分：{banquet}',
+        'user-gifts-label': '已领取的礼品',
+        'user-gifts-empty': '暂时还没有领取礼品。',
+
+        'gift-type-normal': '普通积分',
+        'gift-type-banquet': '宴会积分',
+        'gift-out-of-stock': '暂无库存',
+        'gift-status-out': '该礼品暂时不可兑换。',
+        'gift-status-enough':
+          '您的积分已足够兑换该礼品！请联系管理员。',
+        'gift-status-not-enough':
+          '积分不足，还需大约 {amount}。',
+
+        'gifts-empty':
+          '当前暂无可兑换礼品，请稍后再来查看。'
+      }
+    };
+
+    let currentLang = localStorage.getItem('habi_lang') || 'kk';
     let CURRENT_USER_PHONE = null;
 
-    function initAccordions(){
-      $$('.accordion').forEach(acc=>{
-        acc.querySelector('.accordion-header').addEventListener('click', ()=>{
+    function t(key, vars = {}) {
+      const pack = translations[currentLang] || translations.kk;
+      let text = pack[key] || translations.kk[key] || key;
+      Object.entries(vars).forEach(([k, v]) => {
+        text = text.replace(`{${k}}`, v);
+      });
+      return text;
+    }
+
+    function applyTranslations() {
+      document.title = t('doc-title');
+
+      $$('[data-i18n]').forEach(node => {
+        const key = node.getAttribute('data-i18n');
+        if (!key) return;
+        node.innerHTML = t(key);
+      });
+
+      $$('[data-i18n-placeholder]').forEach(node => {
+        const key = node.getAttribute('data-i18n-placeholder');
+        if (!key) return;
+        node.placeholder = t(key);
+      });
+
+      $$('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === currentLang);
+      });
+    }
+
+    function initLangSwitch() {
+      $$('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const lang = btn.dataset.lang;
+          if (!translations[lang]) return;
+          currentLang = lang;
+          localStorage.setItem('habi_lang', lang);
+          applyTranslations(); // Немедленное применение переводов
+          
+          // Если пользователь уже авторизован, обновляем динамический контент
+          if (CURRENT_USER_PHONE) {
+            loadUserProfile(CURRENT_USER_PHONE, true);
+            loadGiftsForUser(CURRENT_USER_PHONE, null, true);
+          }
+        });
+      });
+    }
+
+    /* === UI Effects === */
+
+    function createParticles() {
+      const bg = $('#bg-animated');
+      const count = 30;
+      const colors = [
+        'rgba(196, 30, 58, 0.03)',
+        'rgba(212, 175, 55, 0.03)',
+        'rgba(42, 157, 143, 0.03)'
+      ];
+
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+
+        const size = Math.random() * 100 + 20;
+        p.style.width = `${size}px`;
+        p.style.height = `${size}px`;
+
+        p.style.left = Math.random() * 100 + '%';
+        p.style.top = Math.random() * 100 + '%';
+        p.style.animationDelay = Math.random() * 20 + 's';
+        p.style.opacity = Math.random() * 0.1 + 0.05;
+        p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+        bg.appendChild(p);
+      }
+    }
+
+    function initScrollAnimation() {
+      const elements = $$('.animate-on-scroll');
+      const observer = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+      elements.forEach(el => observer.observe(el));
+    }
+
+    function initButtonRipple() {
+      $$('.btn, .social-link').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const rect = btn.getBoundingClientRect();
+          const circle = document.createElement('span');
+          const d = Math.max(rect.width, rect.height);
+          circle.style.width = circle.style.height = d + 'px';
+          circle.style.left = e.clientX - rect.left - d / 2 + 'px';
+          circle.style.top = e.clientY - rect.top - d / 2 + 'px';
+          circle.className = 'ripple';
+          btn.appendChild(circle);
+          setTimeout(() => circle.remove(), 600);
+        });
+      });
+    }
+
+    function initAccordions() {
+      $$('.accordion').forEach(acc => {
+        const head = acc.querySelector('.accordion-header');
+        head.addEventListener('click', () => {
           acc.classList.toggle('open');
         });
       });
     }
 
-    async function loadUserProfile(phone){
-      const res = await api('users_me',{phone});
-      const u = res.user;
+    /* === Data rendering === */
+
+    async function loadUserProfile(phone, onlyTranslate = false) {
+      let u;
+
+      if (onlyTranslate && loadUserProfile._cache && loadUserProfile._cache.phone === phone) {
+        u = loadUserProfile._cache.user;
+      } else {
+        const res = await api('users_me', { phone });
+        u = res.user;
+        loadUserProfile._cache = { phone, user: u };
+      }
+
       const box = $('#user-info');
       box.innerHTML = '';
-      const grid = el('div',{class:'user-info-grid'});
+
+      const grid = el('div', { class: 'user-info-grid' });
+
+      const name = u.name || t('user-default-name');
 
       grid.append(
-        el('div',{class:'info-card'},[
-          el('div',{class:'info-label',html:'Қонақтың аты'}),
-          el('div',{class:'info-value',html:u.name || 'Қонақ'}),
-          el('div',{class:'card-subtitle',html:`<i class="fas fa-phone" style="margin-right: 5px;"></i> ${u.phone}`})
-        ]),
-        el('div',{class:'info-card'},[
-          el('div',{class:'info-label',html:'Барлық чек сомасы'}),
-          el('div',{class:'info-value',html:formatMoney(u.lifetime_sum)}),
-          el('div',{class:'card-subtitle',html:
-            `Кәдімгі: ${formatMoney(u.sum_normal)}<br>Банкеттік: ${formatMoney(u.sum_banquet)}`
+        el('div', { class: 'info-card' }, [
+          el('div', { class: 'info-label', html: t('user-name-label') }),
+          el('div', { class: 'info-value', html: name }),
+          el('div', {
+            class: 'card-subtitle',
+            html: `<i class="fas fa-phone" style="margin-right:5px;"></i> ${u.phone}`
           })
         ]),
-        el('div',{class:'info-card'},[
-          el('div',{class:'info-label',html:'Бонус балансы'}),
-          el('div',{class:'info-value',html:formatMoney(u.balance_normal + u.balance_banquet)}),
-          el('div',{class:'card-subtitle',html:
-            `Кәдімгі бонустар: ${formatMoney(u.balance_normal)}<br>Банкеттік бонустар: ${formatMoney(u.balance_banquet)}`
+        el('div', { class: 'info-card' }, [
+          el('div', { class: 'info-label', html: t('user-sum-label') }),
+          el('div', { class: 'info-value', html: formatMoney(u.lifetime_sum) }),
+          el('div', {
+            class: 'card-subtitle',
+            html: t('user-sum-detail', {
+              normal: formatMoney(u.sum_normal),
+              banquet: formatMoney(u.sum_banquet)
+            })
           })
         ]),
-        el('div',{class:'info-card'},[
-          el('div',{class:'info-label',html:'Алынған сыйлықтар'}),
-          el('div',{class:'info-value',html:u.gifts_got && u.gifts_got.length ? u.gifts_got.join(', ') : 'Әзірге сыйлықтар жоқ'})
+        el('div', { class: 'info-card' }, [
+          el('div', { class: 'info-label', html: t('user-balance-label') }),
+          el('div', {
+            class: 'info-value',
+            html: formatMoney((u.balance_normal || 0) + (u.balance_banquet || 0))
+          }),
+          el('div', {
+            class: 'card-subtitle',
+            html: t('user-balance-detail', {
+              normal: formatMoney(u.balance_normal),
+              banquet: formatMoney(u.balance_banquet)
+            })
+          })
+        ]),
+        el('div', { class: 'info-card' }, [
+          el('div', { class: 'info-label', html: t('user-gifts-label') }),
+          el('div', {
+            class: 'info-value',
+            html:
+              u.gifts_got && u.gifts_got.length
+                ? u.gifts_got.join(', ')
+                : t('user-gifts-empty')
+          })
         ])
       );
 
@@ -1530,68 +1472,106 @@
       return u;
     }
 
-    async function loadGiftsForUser(phone, cachedUser){
-      const prof = cachedUser || (await api('users_me',{phone})).user;
-      const res = await api('gifts_list',{});
-      const gifts = res.gifts || [];
+    async function loadGiftsForUser(phone, cachedUser = null, onlyTranslate = false) {
+      let prof;
+
+      if (cachedUser) {
+        prof = cachedUser;
+      } else if (onlyTranslate && loadUserProfile._cache && loadUserProfile._cache.phone === phone) {
+        prof = loadUserProfile._cache.user;
+      } else {
+        const resProf = await api('users_me', { phone });
+        prof = resProf.user;
+        loadUserProfile._cache = { phone, user: prof };
+      }
+
+      let gifts;
+      if (onlyTranslate && loadGiftsForUser._cache) {
+        gifts = loadGiftsForUser._cache;
+      } else {
+        const res = await api('gifts_list', {});
+        gifts = res.gifts || [];
+        loadGiftsForUser._cache = gifts;
+      }
+
       const container = $('#user-gifts');
       container.innerHTML = '';
 
-      if(!gifts.length){
-        container.innerHTML = '<p class="card-subtitle" style="text-align: center; width: 100%; padding: 40px;">Қазіргі уақытта қолжетімді сыйлықтар жоқ. Кейінірек қайта қарап көріңіз.</p>';
+      if (!gifts.length) {
+        container.innerHTML =
+          `<p class="card-subtitle" style="text-align:center;width:100%;padding:40px;">` +
+          t('gifts-empty') +
+          `</p>`;
         return;
       }
 
-      gifts.forEach(g=>{
+      gifts.forEach(g => {
         const left = Number(g.left || 0);
         const outOfStock = left <= 0;
 
         const type = g.bonus_type === 'banquet' ? 'banquet' : 'normal';
-        const typeLabel = type === 'banquet' ? 'Банкеттік бонустар' : 'Кәдімгі бонустар';
-        const userBalance = type === 'banquet'
-          ? prof.balance_banquet
-          : prof.balance_normal;
+        const typeLabel =
+          type === 'banquet' ? t('gift-type-banquet') : t('gift-type-normal');
+
+        const userBalance =
+          type === 'banquet' ? prof.balance_banquet : prof.balance_normal;
 
         const price = Number(g.price || 0);
         const enoughBonus = userBalance >= price;
 
-        const card = el('div',{class:'gift-card'});
-        
-        if(outOfStock){
-          card.append(el('div',{class:'gift-out',html:'Қоймада жоқ'}));
+        const card = el('div', { class: 'gift-card' });
+
+        if (outOfStock) {
+          card.append(el('div', { class: 'gift-out', html: t('gift-out-of-stock') }));
         } else {
-          card.append(el('div',{class:'gift-badge',html:typeLabel}));
+          card.append(el('div', { class: 'gift-badge', html: typeLabel }));
         }
 
-        const imgContainer = el('div',{class:'gift-image'});
-        
+        const imgContainer = el('div', { class: 'gift-image' });
+
         const imgUrl = normalizePhotoUrl(g.photo);
         if (imgUrl) {
           imgContainer.style.backgroundImage = `url(${imgUrl})`;
-          imgContainer.style.backgroundSize = 'cover';
-          imgContainer.style.backgroundPosition = 'center';
         } else {
           imgContainer.innerHTML = '<i class="fas fa-gift"></i>';
         }
-        
+
         let statusText;
-        let statusColor = '';
-        if(outOfStock){
-          statusText = 'Бұл сыйлық әзірге қолжетімсіз.';
+        let statusColor;
+
+        if (outOfStock) {
+          statusText = t('gift-status-out');
           statusColor = 'var(--primary)';
-        }else if(enoughBonus){
-          statusText = `Сізде бұл сыйлыққа жеткілікті бонус бар! Әкімшіге жүгініңіз.`;
+        } else if (enoughBonus) {
+          statusText = t('gift-status-enough');
           statusColor = 'var(--accent)';
-        }else{
-          statusText = `Бонустар жеткіліксіз. Тағы шамамен ${formatMoney(price - userBalance)} жинау қажет.`;
+        } else {
+          statusText = t('gift-status-not-enough', {
+            amount: formatMoney(price - userBalance)
+          });
           statusColor = 'var(--text-light)';
         }
 
-        const content = el('div',{class:'gift-content'},[
-          el('div',{class:'gift-title',html:g.name}),
-          el('div',{class:'gift-price',html:`<i class="fas fa-coins" style="margin-right: 5px;"></i> ${formatMoney(price)}`}),
-          el('div',{class:'gift-left',html:`<i class="fas fa-box" style="margin-right: 5px;"></i> Қалғаны: ${left} дана`}),
-          el('div',{class:'card-subtitle',html:statusText, style:`color:${statusColor}; font-weight:500;`})
+        const content = el('div', { class: 'gift-content' }, [
+          el('div', { class: 'gift-title', html: g.name }),
+          el('div', {
+            class: 'gift-price',
+            html:
+              `<i class="fas fa-coins" style="margin-right:5px;"></i>` +
+              formatMoney(price)
+          }),
+          el('div', {
+            class: 'gift-left',
+            html:
+              `<i class="fas fa-box" style="margin-right:5px;"></i>` +
+              `${left} `
+              + (currentLang === 'zh' ? '个' : 'дана')
+          }),
+          el('div', {
+            class: 'card-subtitle',
+            html: statusText,
+            style: `color:${statusColor};font-weight:500;`
+          })
         ]);
 
         card.append(imgContainer, content);
@@ -1599,71 +1579,79 @@
       });
     }
 
-    function initClient(){
-      $('#btn-user-login').addEventListener('click', async ()=>{
-        const raw = $('#user-phone').value.trim();
+    /* === Client logic === */
+
+    function initClient() {
+      const phoneInput = $('#user-phone');
+      const loginBtn = $('#btn-user-login');
+      const toastNode = $('#u-toast');
+
+      loginBtn.addEventListener('click', async () => {
+        const raw = phoneInput.value.trim();
         const phone = normPhone(raw);
-        
-        if(!phone){
-          toast($('#u-toast'),'Дұрыс телефон нөмірін енгізіңіз',false);
+
+        if (!phone) {
+          showToast(toastNode, t('toast-invalid-phone'), false);
           return;
         }
-        
-        // Батырмаға "жүктелуде" анимациясын қосу
-        const btn = $('#btn-user-login');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Іздеу...';
-        btn.disabled = true;
-        
-        try{
-          await api('auth_user',{phone});
+
+        const originalHTML = loginBtn.innerHTML;
+        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
+        loginBtn.disabled = true;
+
+        try {
+          await api('auth_user', { phone });
+
           CURRENT_USER_PHONE = phone;
           const u = await loadUserProfile(phone);
           await loadGiftsForUser(phone, u);
-          
-          toast($('#u-toast'),`Қош келдіңіз, ${u.name || 'қонақ'}! Бонус деректеріңіз жүктелді`,true);
-          
-          // Аккордеондарды ашу
-          setTimeout(() => {
-            $('#acc-status').classList.add('open');
-          }, 300);
-          
-          setTimeout(() => {
-            $('#acc-gifts').classList.add('open');
-          }, 600);
-          
-          // Сыйлықтар блогына дейін жұмсақ скролл
-          setTimeout(() => {
-            $('#acc-gifts').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }, 1000);
-          
-        }catch(err){
-          toast($('#u-toast'),err.message || 'Қонақ табылмады. Нөмірді тексеріңіз немесе әкімшіге жүгініңіз.',false);
+
+          const name = u.name || t('user-default-name');
+          showToast(toastNode, t('toast-welcome', { name }), true);
+
+          setTimeout(() => $('#acc-status').classList.add('open'), 300);
+          setTimeout(() => $('#acc-gifts').classList.add('open'), 600);
+          setTimeout(
+            () => $('#acc-gifts').scrollIntoView({ behavior: 'smooth', block: 'nearest' }),
+            1000
+          );
+        } catch (err) {
+          showToast(
+            toastNode,
+            err.message || t('toast-not-found'),
+            false
+          );
         } finally {
-          btn.innerHTML = originalText;
-          btn.disabled = false;
+          loginBtn.innerHTML = originalHTML;
+          loginBtn.disabled = false;
         }
       });
-      
-      // Enter арқылы іздеу
-      $('#user-phone').addEventListener('keypress', (e) => {
+
+      phoneInput.addEventListener('keypress', e => {
         if (e.key === 'Enter') {
-          $('#btn-user-login').click();
+          loginBtn.click();
         }
       });
     }
 
-    document.addEventListener('DOMContentLoaded', ()=>{
+    /* === Init === */
+
+    document.addEventListener('DOMContentLoaded', () => {
       createParticles();
       initScrollAnimation();
       initButtonRipple();
       initAccordions();
+      initLangSwitch();
+      applyTranslations();
       initClient();
-      
-      // Хиро тақырыбын әдемі шығару
+
       setTimeout(() => {
-        document.querySelector('.hero-title').classList.add('animate__animated', 'animate__fadeInUp');
-        document.querySelector('.hero-subtitle').classList.add('animate__animated', 'animate__fadeInUp');
+        document
+          .querySelector('.hero-title')
+          .classList.add('animate__animated', 'animate__fadeInUp');
+        document
+          .querySelector('.hero-subtitle')
+          .classList.add('animate__animated', 'animate__fadeInUp');
       }, 300);
     });
   </script>
