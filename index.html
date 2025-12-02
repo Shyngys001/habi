@@ -1,314 +1,1028 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="kk">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>habi — кабинет гостя</title>
+  <title>Habi | Премиум мейрамханасы — Қонақ кабинеті</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <style>
     :root {
-      --primary:#ff1947;
-      --primary-dark:#960505;
-      --primary-bg: #f5f3ff;
-      --secondary: #10b981;
-      --secondary-dark: #059669;
-      --danger: #ef4444;
-      --text: #1f2937;
-      --text-light: #6b7280;
-      --text-lighter: #9ca3af;
-      --bg: #f9fafb;
+      --primary: #C41E3A; /* Мейрамхана үшін элегантты қызыл */
+      --primary-light: #FF4D6D;
+      --primary-dark: #8B0000;
+      --secondary: #D4AF37; /* Алтын акцент */
+      --accent: #2A9D8F; /* Акцент түс */
+      --text: #1a1a1a;
+      --text-light: #5a5a5a;
+      --bg: #ffffff; /* Таза ақ фон */
+      --bg-light: #FFF9F5;
       --bg-card: #ffffff;
-      --border: #e5e7eb;
-      --border-light: #f3f4f6;
-      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      --radius: 12px;
-      --radius-lg: 16px;
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
+      --radius: 16px;
+      --radius-lg: 24px;
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
     }
 
-    * { box-sizing:border-box; margin:0; padding:0; }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
 
     body {
-      min-height:100vh;
-      font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      line-height:1.5;
+      min-height: 100vh;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
     }
 
+    /* Анимирленген ақ фон (бөлшектер) */
+    .bg-animated {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      overflow: hidden;
+    }
+    
+    .particle {
+      position: absolute;
+      background: rgba(196, 30, 58, 0.03);
+      border-radius: 50%;
+      animation: float 20s infinite linear;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0.5;
+      }
+      25% {
+        transform: translateY(-20px) translateX(20px) rotate(90deg);
+        opacity: 0.7;
+      }
+      50% {
+        transform: translateY(0) translateX(40px) rotate(180deg);
+        opacity: 0.5;
+      }
+      75% {
+        transform: translateY(20px) translateX(20px) rotate(270deg);
+        opacity: 0.7;
+      }
+      100% {
+        transform: translateY(0) translateX(0) rotate(360deg);
+        opacity: 0.5;
+      }
+    }
+    
+    /* Жоғарғы градиент жолағы */
+    .top-gradient {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 300px;
+      background: linear-gradient(135deg, rgba(255, 249, 245, 0.9) 0%, rgba(255, 255, 255, 0) 100%);
+      z-index: -1;
+    }
+
+    /* Мейрамхана логотипі */
+    .restaurant-logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    
+    .logo-img {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(196, 30, 58, 0.2);
+      transition: var(--transition);
+    }
+    
+    .logo-img::after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+    
+    .restaurant-logo:hover .logo-img::after {
+      transform: translateX(100%);
+    }
+    
+    .logo-img i {
+      font-size: 24px;
+      color: white;
+      z-index: 1;
+    }
+    
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .logo-main {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 1px;
+      line-height: 1.1;
+    }
+    
+    .logo-sub {
+      font-size: 12px;
+      color: var(--text-light);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* Хиро-секция */
+    .hero-section {
+      padding: 60px 0 40px;
+      text-align: center;
+      position: relative;
+    }
+    
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+    
+    .hero-title span {
+      color: var(--primary);
+      position: relative;
+      display: inline-block;
+    }
+    
+    .hero-title span::after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      left: 0;
+      width: 100%;
+      height: 8px;
+      background-color: rgba(212, 175, 55, 0.3);
+      z-index: -1;
+    }
+    
+    .hero-subtitle {
+      font-size: 20px;
+      color: var(--text-light);
+      max-width: 700px;
+      margin: 0 auto 40px;
+      font-weight: 300;
+    }
+    
+    /* Негізгі контейнер */
     .app-container {
-      max-width: 900px;
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 0 16px 40px;
+      padding: 0 20px 60px;
+      position: relative;
+      z-index: 1;
     }
-
+    
+    /* Жоғарғы хедер */
     .app-header {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:20px 0;
-      margin-bottom:16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 25px 0;
+      margin-bottom: 20px;
     }
-
-    .logo {
-      display:flex;
-      align-items:center;
-      gap:12px;
-      font-weight:800;
-      font-size:24px;
-      color:var(--primary);
-    }
-
-    .logo-icon {
-      background:var(--primary);
-      color:white;
-      width:40px;
-      height:40px;
-      border-radius:10px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-
+    
+    /* Карточкалар */
     .card {
-      background:var(--bg-card);
-      border-radius:var(--radius-lg);
-      padding:24px;
-      box-shadow:var(--shadow);
-      border:1px solid var(--border);
-      margin-bottom:20px;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      margin-bottom: 30px;
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
     }
-
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+    }
+    
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-lg);
+    }
+    
     .card-title {
-      font-size:20px;
-      font-weight:700;
-      margin-bottom:4px;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text);
+      font-family: 'Playfair Display', serif;
     }
-
+    
     .card-subtitle {
-      font-size:14px;
-      color:var(--text-light);
+      font-size: 16px;
+      color: var(--text-light);
+      margin-bottom: 25px;
     }
-
-    .form-group { margin-top:16px; margin-bottom:12px; }
-
+    
+    /* "Мейрамханаға келіңіз" секциясы */
+    .visit-section {
+      text-align: center;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 250, 250, 0.95) 100%);
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 60px 0;
+      margin: 40px 0;
+    }
+    
+    .visit-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 15px;
+    }
+    
+    .visit-subtitle {
+      font-size: 18px;
+      color: var(--text-light);
+      max-width: 700px;
+      margin: 0 auto 40px;
+    }
+    
+    .social-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 30px;
+    }
+    
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 30px;
+      border-radius: var(--radius);
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+      gap: 12px;
+      min-width: 200px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+    
+    .social-link.whatsapp {
+      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+      color: white;
+    }
+    
+    .social-link.instagram {
+      background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+      color: white;
+    }
+    
+    .social-link.menu {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+    }
+    
+    .social-link:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Формалар */
+    .form-group {
+      margin-top: 20px;
+      margin-bottom: 25px;
+    }
+    
     .form-label {
-      display:block;
-      font-size:14px;
-      font-weight:500;
-      margin-bottom:6px;
+      display: block;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text);
     }
-
+    
+    .form-input-wrapper {
+      position: relative;
+    }
+    
     .form-input {
-      width:100%;
-      padding:12px 16px;
-      border-radius:var(--radius);
-      border:1px solid var(--border);
-      font-size:15px;
-      transition:all .2s;
+      width: 100%;
+      padding: 18px 20px;
+      border-radius: var(--radius);
+      border: 1px solid #e0e0e0;
+      font-size: 16px;
+      transition: var(--transition);
+      background: rgba(255, 255, 255, 0.9);
     }
-
+    
     .form-input:focus {
-      outline:none;
-      border-color:var(--primary);
-      box-shadow:0 0 0 3px rgba(124,58,237,0.1);
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(196, 30, 58, 0.1);
+      background: white;
     }
-
+    
+    .form-icon {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+      font-size: 18px;
+    }
+    
+    /* Батырмалар */
     .btn {
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:12px 20px;
-      border-radius:var(--radius);
-      font-size:14px;
-      font-weight:500;
-      cursor:pointer;
-      transition:all .2s;
-      border:none;
-      gap:8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 32px;
+      border-radius: var(--radius);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
     }
-    .btn-primary { background:var(--primary); color:white; }
-    .btn-primary:hover { background:var(--primary-dark); }
-
+    
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%);
+      transform-origin: 50% 50%;
+    }
+    
+    .btn:focus:not(:active)::after {
+      animation: ripple 1s ease-out;
+    }
+    
+    @keyframes ripple {
+      0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(20, 20);
+        opacity: 0;
+      }
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      box-shadow: 0 10px 20px rgba(196, 30, 58, 0.2);
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 25px rgba(196, 30, 58, 0.3);
+    }
+    
     .btn-secondary {
-      background:var(--secondary);
-      color:white;
+      background: linear-gradient(135deg, var(--secondary) 0%, #B8860B 100%);
+      color: white;
+      box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
     }
-    .btn-secondary:hover { background:var(--secondary-dark); }
-
+    
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #E6C158 0%, var(--secondary) 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 25px rgba(212, 175, 55, 0.3);
+    }
+    
     .btn-outline {
-      background:transparent;
-      border:1px solid var(--border);
-      color:var(--text);
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
     }
-
-    .btn[disabled]{opacity:.6;cursor:default;}
-
+    
+    .btn-outline:hover {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .btn[disabled] {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    .btn[disabled]:hover {
+      transform: none;
+    }
+    
+    /* Хабарламалар (toast) */
     .toast {
-      margin-top:12px;
-      padding:10px 14px;
-      border-radius:var(--radius);
-      font-size:14px;
-      display:flex;
-      align-items:center;
-      gap:8px;
+      margin-top: 20px;
+      padding: 18px 20px;
+      border-radius: var(--radius);
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: fadeIn 0.5s ease;
     }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
     .toast-success {
-      background:#ecfdf5;
-      color:var(--secondary-dark);
-      border:1px solid #a7f3d0;
+      background: rgba(42, 157, 143, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(42, 157, 143, 0.2);
     }
+    
     .toast-error {
-      background:#fef2f2;
-      color:#b91c1c;
-      border:1px solid #fecaca;
+      background: rgba(196, 30, 58, 0.1);
+      color: var(--primary);
+      border: 1px solid rgba(196, 30, 58, 0.2);
     }
-
+    
+    /* Аккордеон */
     .accordion {
-      border-radius:var(--radius-lg);
-      border:1px solid var(--border);
-      background:var(--bg-card);
-      margin-bottom:16px;
-      overflow:hidden;
-      box-shadow:var(--shadow);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      background: var(--bg-card);
+      margin-bottom: 25px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
     }
-
+    
+    .accordion:hover {
+      box-shadow: var(--shadow-lg);
+    }
+    
     .accordion-header {
-      padding:16px 20px;
-      background:var(--bg);
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      font-weight:600;
+      padding: 25px 30px;
+      background: rgba(255, 255, 255, 0.9);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--text);
+      transition: var(--transition);
     }
-    .accordion-header:hover { background:var(--border-light); }
-
-    .accordion-body { padding:20px; border-top:1px solid var(--border); display:none; }
-    .accordion.open .accordion-body { display:block; }
-
-    .accordion-icon { transition:transform .3s; }
-    .accordion.open .accordion-icon { transform:rotate(180deg); }
-
+    
+    .accordion-header:hover {
+      background: rgba(255, 255, 255, 1);
+    }
+    
+    .accordion-body {
+      padding: 30px;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      display: none;
+      animation: slideDown 0.4s ease;
+    }
+    
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .accordion.open .accordion-body {
+      display: block;
+    }
+    
+    .accordion-icon {
+      transition: var(--transition);
+      color: var(--primary);
+    }
+    
+    .accordion.open .accordion-icon {
+      transform: rotate(180deg);
+    }
+    
+    /* Қонақ туралы ақпарат */
     .user-info-grid {
-      display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-      gap:16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
     }
+    
     .info-card {
-      background:var(--bg);
-      border-radius:var(--radius);
-      padding:16px;
-      border:1px solid var(--border-light);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(250, 250, 250, 0.9) 100%);
+      border-radius: var(--radius);
+      padding: 25px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
     }
+    
+    .info-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+    
+    .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--primary), var(--secondary));
+    }
+    
     .info-label {
-      font-size:13px;
-      color:var(--text-light);
-      margin-bottom:4px;
+      font-size: 14px;
+      color: var(--text-light);
+      margin-bottom: 8px;
+      font-weight: 500;
     }
+    
     .info-value {
-      font-size:18px;
-      font-weight:700;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
     }
-
-    .gift-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-      gap:16px;
+    
+    /* Сыйлықтар */
+    .gift-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
     }
-    .gift-card{
-      border-radius:var(--radius-lg);
-      border:1px solid var(--border);
-      overflow:hidden;
-      background:var(--bg-card);
-      position:relative;
-      transition:all .3s;
+    
+    .gift-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      background: white;
+      position: relative;
+      transition: var(--transition);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     }
-    .gift-card:hover{transform:translateY(-4px); box-shadow:var(--shadow-lg);}
-    .gift-image{
-      width:100%;
-      height:120px;
-      object-fit:contain;
+    
+    .gift-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
     }
-    .gift-content{padding:16px;}
-    .gift-title{font-size:16px;font-weight:600;margin-bottom:8px;}
-    .gift-price{font-size:14px;color:var(--text-light);margin-bottom:4px;}
-    .gift-left{font-size:12px;color:var(--text-lighter);margin-bottom:8px;}
-    .gift-out{
-      position:absolute;
-      top:10px;right:10px;
-      padding:4px 10px;
-      border-radius:999px;
-      background:#fee2e2;
-      color:#b91c1c;
-      font-size:11px;
-      font-weight:600;
+    
+    .gift-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      position: relative;
     }
-
+    
+    .gift-image i {
+      font-size: 60px;
+      color: rgba(0, 0, 0, 0.1);
+    }
+    
+    .gift-content {
+      padding: 25px;
+    }
+    
+    .gift-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+    
+    .gift-price {
+      font-size: 16px;
+      color: var(--primary);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    
+    .gift-left {
+      font-size: 14px;
+      color: var(--text-light);
+      margin-bottom: 15px;
+    }
+    
+    .gift-out {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      padding: 6px 15px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    
+    .gift-badge {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: var(--secondary);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    
+    /* Админге сілтеме */
     .link-admin {
-      font-size:13px;
-      color:var(--text-light);
-      text-align:right;
-      margin-top:8px;
+      font-size: 15px;
+      color: var(--text-light);
+      text-align: right;
     }
-    .link-admin a { color:var(--text-light); text-decoration:underline; }
+    
+    .link-admin a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .link-admin a:hover {
+      color: var(--primary-dark);
+      text-decoration: underline;
+    }
+    
+    /* Футер */
+    .app-footer {
+      margin-top: 60px;
+      padding: 40px 0;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      text-align: center;
+      color: var(--text-light);
+      font-size: 14px;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
+    }
+    
+    .footer-links a {
+      color: var(--text-light);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+    
+    /* Контакт ақпараты */
+    .contact-info {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      margin: 40px 0;
+      text-align: center;
+    }
+    
+    .contact-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      min-width: 200px;
+    }
+    
+    .contact-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(196, 30, 58, 0.1) 0%, rgba(212, 175, 55, 0.1) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    
+    .contact-text {
+      font-size: 16px;
+      color: var(--text);
+    }
+    
+    .contact-detail {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+    
+    /* Скроллмен шығатын анимация */
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    
+    .animate-on-scroll.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Адаптивтілік */
+    @media (max-width: 992px) {
+      .hero-title {
+        font-size: 38px;
+      }
+      
+      .hero-subtitle {
+        font-size: 18px;
+      }
+      
+      .visit-title {
+        font-size: 32px;
+      }
+      
+      .card {
+        padding: 30px;
+      }
+      
+      .social-link {
+        min-width: 180px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 32px;
+      }
+      
+      .app-header {
+        flex-direction: column;
+        gap: 20px;
+      }
+      
+      .link-admin {
+        text-align: center;
+      }
+      
+      .user-info-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .gift-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .visit-title {
+        font-size: 28px;
+      }
+      
+      .social-links {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .social-link {
+        width: 100%;
+        max-width: 300px;
+      }
+      
+      .contact-info {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+      }
+      
+      .footer-links {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .hero-title {
+        font-size: 28px;
+      }
+      
+      .hero-subtitle {
+        font-size: 16px;
+      }
+      
+      .visit-title {
+        font-size: 24px;
+      }
+      
+      .visit-subtitle {
+        font-size: 16px;
+      }
+      
+      .card {
+        padding: 25px 20px;
+      }
+      
+      .btn, .social-link {
+        padding: 16px 24px;
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Анимирленген фон (бөлшектер) -->
+  <div class="bg-animated" id="bg-animated"></div>
+  <div class="top-gradient"></div>
+  
   <div class="app-container">
-    <header class="app-header">
-      <div class="logo">
-        <div class="logo-icon"><i class="fas fa-gift"></i></div>
-        <span>habi</span>
-      </div>
+    <header class="app-header animate-on-scroll">
+      <a href="#" class="restaurant-logo">
+        <div class="logo-img">
+          <i class="fas fa-utensils"></i>
+        </div>
+        <div class="logo-text">
+          <div class="logo-main">HABI</div>
+          <div class="logo-sub">Restaurant & Lounge</div>
+        </div>
+      </a>
+      
       <div class="link-admin">
-        <a href="admin.html">Вход для сотрудников</a>
+        <a href="admin.html"><i class="fas fa-lock"></i> Қызметкерлер үшін кіру</a>
       </div>
     </header>
-
-    <section class="card">
-      <h2 class="card-title">Личный кабинет гостя</h2>
-      <p class="card-subtitle">Введите номер телефона, который вы оставляли в ресторане habi.</p>
-
+    
+    <section class="hero-section animate-on-scroll">
+      <h1 class="hero-title"><span>Бонус жүйесі</span> — Habi мейрамханасында</h1>
+      <p class="hero-subtitle">
+        Бонус теңгеріміңізді көріңіз, сыйлықтарыңызды қадағалаңыз және эксклюзивті ұсыныстар алыңыз.
+        Біздің мейрамханаға келген кезде қалдырған телефон нөміріңізді енгізіңіз.
+      </p>
+    </section>
+    
+    <section class="card animate-on-scroll">
+      <h2 class="card-title">Бонус жүйесіне кіру</h2>
+      <p class="card-subtitle">5000-нан астам қонақ Habi бонус бағдарламасын қолданып, сыйлықтар алып отыр</p>
+      
       <div class="form-group">
-        <label class="form-label">Номер телефона</label>
-        <input type="text" class="form-input" id="user-phone" placeholder="+7 777 000 00 00">
+        <label class="form-label">Телефон нөмірі</label>
+        <div class="form-input-wrapper">
+          <input type="text" class="form-input" id="user-phone" placeholder="+7 777 000 00 00">
+          <i class="fas fa-phone form-icon"></i>
+        </div>
       </div>
+      
       <button class="btn btn-primary" id="btn-user-login">
-        <i class="fas fa-sign-in-alt"></i> Поиск
+        <i class="fas fa-sign-in-alt"></i> Бонустарымды табу
       </button>
+      
       <div id="u-toast" class="toast"></div>
     </section>
-
-    <section class="accordion" id="acc-status">
+    
+    <section class="accordion animate-on-scroll" id="acc-status">
       <div class="accordion-header">
-        <span>Мой статус и баланс</span>
+        <span><i class="fas fa-crown" style="color: var(--secondary); margin-right: 10px;"></i> Менің мәртебем және балансым</span>
         <i class="fas fa-chevron-down accordion-icon"></i>
       </div>
       <div class="accordion-body">
         <div id="user-info"></div>
       </div>
     </section>
-
-    <section class="accordion" id="acc-gifts">
+    
+    <section class="accordion animate-on-scroll" id="acc-gifts">
       <div class="accordion-header">
-        <span>Доступные подарки</span>
+        <span><i class="fas fa-gift" style="color: var(--primary); margin-right: 10px;"></i> Қолжетімді сыйлықтар</span>
         <i class="fas fa-chevron-down accordion-icon"></i>
       </div>
       <div class="accordion-body">
-        <p class="card-subtitle" style="margin-bottom:10px;">
-          Обычные баллы и баллы за банкеты считаются отдельно. Подарок может требовать один из двух типов баллов.
+        <p class="card-subtitle" style="margin-bottom:20px;">
+          Кәдімгі және банкет бонустары бөлек есептеледі. Әр сыйлық осы екі түрдің біріне байланыстырылған болуы мүмкін.
         </p>
         <div id="user-gifts" class="gift-grid"></div>
       </div>
     </section>
+    
+    <!-- "Мейрамханаға келіңіз" секциясы -->
+    <section class="visit-section animate-on-scroll">
+      <h2 class="visit-title">Habi мейрамханасына келіңіз</h2>
+      <p class="visit-subtitle">
+        Біз сізді жайлы атмосферада күтеміз. Үстел брондаңыз, онлайн-менюді көріңіз
+        немесе сұрақтарыңызды қойыңыз.
+      </p>
+      
+      <div class="social-links">
+        <a href="https://wa.me/77068706666" class="social-link whatsapp" target="_blank">
+          <i class="fab fa-whatsapp"></i> WhatsApp арқылы жазу
+        </a>
+        <a href="https://www.instagram.com/habi.cafe.hogo/" class="social-link instagram" target="_blank">
+          <i class="fab fa-instagram"></i> Instagram парақшасы
+        </a>
+        <a href="https://menu-online.co/habihogo/webstore/welcome" class="social-link menu" target="_blank">
+          <i class="fas fa-utensils"></i> Онлайн-меню
+        </a>
+      </div>
+      
+      <div class="contact-info">
+        <div class="contact-item">
+          <div class="contact-icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+        </div>
+        
+        <div class="contact-item">
+          <div class="contact-icon">
+            <i class="fas fa-phone"></i>
+          </div>
+          <div class="contact-text">Телефон</div>
+          <div class="contact-detail">+7 (777) 123-45-67</div>
+        </div>
+        
+        <div class="contact-item">
+          <div class="contact-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="contact-text">Жұмыс уақыты</div>
+          <div class="contact-detail">Күн сайын 12:00 – 00:00</div>
+        </div>
+      </div>
+    </section>
+    
+    <footer class="app-footer animate-on-scroll">
+      <p>© 2025 Habi мейрамханасы. Барлық құқықтар қорғалған.</p>
+      <p>+7 7068706666</p>
+      
+      <div class="footer-links">
+        <a href="#"><i class="fas fa-info-circle"></i> Мейрамхана туралы</a>
+        <a href="#"><i class="fas fa-concierge-bell"></i> Меню</a>
+        <a href="#"><i class="fas fa-calendar-alt"></i> Үстел брондау</a>
+        <a href="#"><i class="fas fa-question-circle"></i> Көмек</a>
+      </div>
+    </footer>
   </div>
 
   <script>
-    /* URL Apps Script */
+    /* Apps Script URL-і */
     const API_BASE = 'https://script.google.com/macros/s/AKfycbxkyjMArpTcCEOLR73rkllZGIAFPxddb9k3VuVpCic4pSFKEoJHn4_95BKb96u2QY6PqA/exec';
 
     const $ = s => document.querySelector(s);
@@ -325,6 +1039,76 @@
       return n;
     };
 
+    // Фонға анимирленген бөлшектер қосу
+    function createParticles() {
+      const bg = $('#bg-animated');
+      const particleCount = 30;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Кездейсоқ өлшем мен позиция
+        const size = Math.random() * 100 + 20;
+        const left = Math.random() * 100;
+        const top = Math.random() * 100;
+        const delay = Math.random() * 20;
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${left}%`;
+        particle.style.top = `${top}%`;
+        particle.style.animationDelay = `${delay}s`;
+        particle.style.opacity = Math.random() * 0.1 + 0.05;
+        
+        // Бояу палитрасы
+        const colors = [
+          'rgba(196, 30, 58, 0.03)',
+          'rgba(212, 175, 55, 0.03)',
+          'rgba(42, 157, 143, 0.03)'
+        ];
+        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        
+        bg.appendChild(particle);
+      }
+    }
+    
+    // Скролл кезінде блоктардың әдемі шығуы
+    function initScrollAnimation() {
+      const elements = $$('.animate-on-scroll');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      elements.forEach(el => observer.observe(el));
+    }
+    
+    // Батырмаларға "ripple" анимациясы
+    function initButtonRipple() {
+      $$('.btn, .social-link').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          const x = e.clientX - e.target.getBoundingClientRect().left;
+          const y = e.clientY - e.target.getBoundingClientRect().top;
+          
+          const ripple = document.createElement('span');
+          ripple.style.left = x + 'px';
+          ripple.style.top = y + 'px';
+          ripple.classList.add('ripple');
+          
+          this.appendChild(ripple);
+          
+          setTimeout(() => {
+            ripple.remove();
+          }, 600);
+        });
+      });
+    }
+
     function normPhone(p){
       p = String(p || '').replace(/[^\d+]/g,'');
       if(p.startsWith('+7')) return p;
@@ -335,77 +1119,48 @@
     }
 
     function normalizePhotoUrl(url) {
-if (!url) return '';
+      if (!url) return '';
+      url = String(url).trim();
+      if (!url) return '';
+      
+      if (url.startsWith('data:image')) return url;
+      
+      if (url.startsWith('=IMAGE("')) {
+        url = url.replace(/^=IMAGE\("(.*?)"\)$/i, '$1');
+        url = url.replace(/^["']+|["']+$/g, '');
+      }
+      
+      let fileId = '';
+      let match = url.match(/drive\.usercontent\.google\.com\/download\?id=([a-zA-Z0-9_-]+)/);
+      if (match) fileId = match[1];
+      
+      if (!fileId) match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+      if (match && !fileId) fileId = match[1];
+      
+      if (!fileId) match = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+      if (match && !fileId) fileId = match[1];
+      
+      if (!fileId) match = url.match(/drive\.google\.com\/uc\?id=([a-zA-Z0-9_-]+)/);
+      if (match && !fileId) fileId = match[1];
+      
+      if (!fileId && /^[a-zA-Z0-9_-]{25,}$/.test(url)) fileId = url;
+      
+      if (fileId) return `https://lh3.googleusercontent.com/d/${fileId}=s1000?authuser=0`;
+      
+      if (/^https?:\/\/.*\.(jpg|jpeg|png|gif|webp|bmp|svg)(\?.*)?$/i.test(url)) return url;
+      
+      if (url.startsWith('http')) return url;
+      
+      return '';
+    }
 
-url = String(url).trim();
-if (!url) return '';
-
-// 1) Если это data:image — возвращаем как есть
-if (url.startsWith('data:image')) return url;
-
-// 2) Убираем формулы Google Sheets
-if (url.startsWith('=IMAGE("')) {
-  url = url.replace(/^=IMAGE\("(.*?)"\)$/i, '$1');
-  url = url.replace(/^["']+|["']+$/g, ''); // Убираем кавычки
-}
-
-// 3) Извлечение ID из различных форматов Google Drive
-let fileId = '';
-
-// Формат: https://drive.usercontent.google.com/download?id=ID...
-let match = url.match(/drive\.usercontent\.google\.com\/download\?id=([a-zA-Z0-9_-]+)/);
-if (match) {
-  fileId = match[1];
-}
-
-// Формат: https://drive.google.com/file/d/ID/view
-if (!fileId) {
-  match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
-  if (match) fileId = match[1];
-}
-
-// Формат: https://drive.google.com/open?id=ID
-if (!fileId) {
-  match = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
-  if (match) fileId = match[1];
-}
-
-// Формат: https://drive.google.com/uc?id=ID
-if (!fileId) {
-  match = url.match(/drive\.google\.com\/uc\?id=([a-zA-Z0-9_-]+)/);
-  if (match) fileId = match[1];
-}
-
-// Формат: Просто ID (без полного URL)
-if (!fileId && /^[a-zA-Z0-9_-]{25,}$/.test(url)) {
-  fileId = url;
-}
-
-// 4) Если нашли ID — формируем правильную ссылку для просмотра
-if (fileId) {
-  return `https://lh3.googleusercontent.com/d/${fileId}=s1000?authuser=0`;
-}
-
-// 5) Проверяем, является ли ссылка прямым изображением
-if (/^https?:\/\/.*\.(jpg|jpeg|png|gif|webp|bmp|svg)(\?.*)?$/i.test(url)) {
-  return url;
-}
-
-// 6) Для других внешних ссылок — возвращаем как есть
-if (url.startsWith('http')) {
-  return url;
-}
-
-// 7) Возвращаем пустую строку, если не распознали
-return '';
-}
     function toast(node,msg,ok=true){
       if(!node) return;
       node.className = 'toast ' + (ok?'toast-success':'toast-error');
       node.innerHTML = ok
         ? `<i class="fas fa-check-circle"></i> ${msg}`
         : `<i class="fas fa-exclamation-circle"></i> ${msg}`;
-      setTimeout(()=>{ if(node.innerHTML.includes(msg)) node.innerHTML=''; },3000);
+      setTimeout(()=>{ if(node.innerHTML.includes(msg)) node.innerHTML=''; },4000);
     }
 
     async function api(action, body={}, method='POST'){
@@ -421,7 +1176,7 @@ return '';
         });
       }
       const data = await res.json().catch(()=>({ok:false,error:'JSON parse error'}));
-      if(!data.ok) throw new Error(data.error || 'Ошибка запроса');
+      if(!data.ok) throw new Error(data.error || 'Сұрауды орындау кезінде қате пайда болды');
       return data;
     }
 
@@ -449,27 +1204,27 @@ return '';
 
       grid.append(
         el('div',{class:'info-card'},[
-          el('div',{class:'info-label',html:'Имя'}),
-          el('div',{class:'info-value',html:u.name || '-'}),
-          el('div',{class:'card-subtitle',html:u.phone})
+          el('div',{class:'info-label',html:'Қонақтың аты'}),
+          el('div',{class:'info-value',html:u.name || 'Қонақ'}),
+          el('div',{class:'card-subtitle',html:`<i class="fas fa-phone" style="margin-right: 5px;"></i> ${u.phone}`})
         ]),
         el('div',{class:'info-card'},[
-          el('div',{class:'info-label',html:'Сумма чеков'}),
+          el('div',{class:'info-label',html:'Барлық чек сомасы'}),
           el('div',{class:'info-value',html:formatMoney(u.lifetime_sum)}),
           el('div',{class:'card-subtitle',html:
-            `Обычные: ${formatMoney(u.sum_normal)}<br>Банкеты: ${formatMoney(u.sum_banquet)}`
+            `Кәдімгі: ${formatMoney(u.sum_normal)}<br>Банкеттік: ${formatMoney(u.sum_banquet)}`
           })
         ]),
         el('div',{class:'info-card'},[
-          el('div',{class:'info-label',html:'Бонусный баланс'}),
+          el('div',{class:'info-label',html:'Бонус балансы'}),
           el('div',{class:'info-value',html:formatMoney(u.balance_normal + u.balance_banquet)}),
           el('div',{class:'card-subtitle',html:
-            `Обычные баллы: ${formatMoney(u.balance_normal)}<br>Баллы за банкеты: ${formatMoney(u.balance_banquet)}`
+            `Кәдімгі бонустар: ${formatMoney(u.balance_normal)}<br>Банкеттік бонустар: ${formatMoney(u.balance_banquet)}`
           })
         ]),
         el('div',{class:'info-card'},[
-          el('div',{class:'info-label',html:'Полученные подарки'}),
-          el('div',{class:'info-value',html:u.gifts_got && u.gifts_got.length ? u.gifts_got.join(', ') : '—'})
+          el('div',{class:'info-label',html:'Алынған сыйлықтар'}),
+          el('div',{class:'info-value',html:u.gifts_got && u.gifts_got.length ? u.gifts_got.join(', ') : 'Әзірге сыйлықтар жоқ'})
         ])
       );
 
@@ -485,7 +1240,7 @@ return '';
       container.innerHTML = '';
 
       if(!gifts.length){
-        container.innerHTML = '<p class="card-subtitle">Пока нет доступных подарков.</p>';
+        container.innerHTML = '<p class="card-subtitle" style="text-align: center; width: 100%; padding: 40px;">Қазіргі уақытта қолжетімді сыйлықтар жоқ. Кейінірек қайта қарап көріңіз.</p>';
         return;
       }
 
@@ -494,7 +1249,7 @@ return '';
         const outOfStock = left <= 0;
 
         const type = g.bonus_type === 'banquet' ? 'banquet' : 'normal';
-        const typeLabel = type === 'banquet' ? 'Баллы за банкеты' : 'Обычные баллы';
+        const typeLabel = type === 'banquet' ? 'Банкеттік бонустар' : 'Кәдімгі бонустар';
         const userBalance = type === 'banquet'
           ? prof.balance_banquet
           : prof.balance_normal;
@@ -503,33 +1258,45 @@ return '';
         const enoughBonus = userBalance >= price;
 
         const card = el('div',{class:'gift-card'});
+        
         if(outOfStock){
-          card.append(el('div',{class:'gift-out',html:'Нет в наличии'}));
+          card.append(el('div',{class:'gift-out',html:'Қоймада жоқ'}));
+        } else {
+          card.append(el('div',{class:'gift-badge',html:typeLabel}));
         }
 
-        const img = el('img',{
-          class:'gift-image',
-          src: normalizePhotoUrl(g.photo) || 'https://via.placeholder.com/400x300?text=Gift'
-        });
-
+        const imgContainer = el('div',{class:'gift-image'});
+        
+        const imgUrl = normalizePhotoUrl(g.photo);
+        if (imgUrl) {
+          imgContainer.style.backgroundImage = `url(${imgUrl})`;
+          imgContainer.style.backgroundSize = 'cover';
+          imgContainer.style.backgroundPosition = 'center';
+        } else {
+          imgContainer.innerHTML = '<i class="fas fa-gift"></i>';
+        }
+        
         let statusText;
+        let statusColor = '';
         if(outOfStock){
-          statusText = 'Подарок временно недоступен.';
+          statusText = 'Бұл сыйлық әзірге қолжетімсіз.';
+          statusColor = 'var(--primary)';
         }else if(enoughBonus){
-          statusText = `Доступен за ваши ${typeLabel.toLowerCase()}. Обратитесь к администратору ресторана.`;
+          statusText = `Сізде бұл сыйлыққа жеткілікті бонус бар! Әкімшіге жүгініңіз.`;
+          statusColor = 'var(--accent)';
         }else{
-          statusText = `Недостаточно ${typeLabel.toLowerCase()}.`;
+          statusText = `Бонустар жеткіліксіз. Тағы шамамен ${formatMoney(price - userBalance)} жинау қажет.`;
+          statusColor = 'var(--text-light)';
         }
 
         const content = el('div',{class:'gift-content'},[
           el('div',{class:'gift-title',html:g.name}),
-          el('div',{class:'gift-price',html:`Цена: ${formatMoney(price)}`}),
-          el('div',{class:'gift-left',html:`Тип бонусов: ${typeLabel}`}),
-          el('div',{class:'gift-left',html:`Остаток: ${left} шт.`}),
-          el('div',{class:'card-subtitle',html:statusText})
+          el('div',{class:'gift-price',html:`<i class="fas fa-coins" style="margin-right: 5px;"></i> ${formatMoney(price)}`}),
+          el('div',{class:'gift-left',html:`<i class="fas fa-box" style="margin-right: 5px;"></i> Қалғаны: ${left} дана`}),
+          el('div',{class:'card-subtitle',html:statusText, style:`color:${statusColor}; font-weight:500;`})
         ]);
 
-        card.append(img, content);
+        card.append(imgContainer, content);
         container.append(card);
       });
     }
@@ -538,27 +1305,68 @@ return '';
       $('#btn-user-login').addEventListener('click', async ()=>{
         const raw = $('#user-phone').value.trim();
         const phone = normPhone(raw);
+        
         if(!phone){
-          toast($('#u-toast'),'Введите корректный номер телефона',false);
+          toast($('#u-toast'),'Дұрыс телефон нөмірін енгізіңіз',false);
           return;
         }
+        
+        // Батырмаға "жүктелуде" анимациясын қосу
+        const btn = $('#btn-user-login');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Іздеу...';
+        btn.disabled = true;
+        
         try{
           await api('auth_user',{phone});
           CURRENT_USER_PHONE = phone;
           const u = await loadUserProfile(phone);
           await loadGiftsForUser(phone, u);
-          toast($('#u-toast'),'Вы успешно вошли',true);
-          $('#acc-status').classList.add('open');
-          $('#acc-gifts').classList.add('open');
+          
+          toast($('#u-toast'),`Қош келдіңіз, ${u.name || 'қонақ'}! Бонус деректеріңіз жүктелді`,true);
+          
+          // Аккордеондарды ашу
+          setTimeout(() => {
+            $('#acc-status').classList.add('open');
+          }, 300);
+          
+          setTimeout(() => {
+            $('#acc-gifts').classList.add('open');
+          }, 600);
+          
+          // Сыйлықтар блогына дейін жұмсақ скролл
+          setTimeout(() => {
+            $('#acc-gifts').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 1000);
+          
         }catch(err){
-          toast($('#u-toast'),err.message || 'Клиент не найден',false);
+          toast($('#u-toast'),err.message || 'Қонақ табылмады. Нөмірді тексеріңіз немесе әкімшіге жүгініңіз.',false);
+        } finally {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        }
+      });
+      
+      // Enter арқылы іздеу
+      $('#user-phone').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          $('#btn-user-login').click();
         }
       });
     }
 
     document.addEventListener('DOMContentLoaded', ()=>{
+      createParticles();
+      initScrollAnimation();
+      initButtonRipple();
       initAccordions();
       initClient();
+      
+      // Хиро тақырыбын әдемі шығару
+      setTimeout(() => {
+        document.querySelector('.hero-title').classList.add('animate__animated', 'animate__fadeInUp');
+        document.querySelector('.hero-subtitle').classList.add('animate__animated', 'animate__fadeInUp');
+      }, 300);
     });
   </script>
 </body>
