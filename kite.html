@@ -450,6 +450,52 @@
       margin-bottom:6px;
     }
 
+    /* DAILY DATE TABS */
+    .daily-dates{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin:4px 0 8px;
+    }
+    .date-tab{
+      border:none;
+      border-radius:999px;
+      padding:4px 10px;
+      font-size:11px;
+      background:#e5e7eb;
+      color:#374151;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .date-tab.active{
+      background:#111827;
+      color:#f9fafb;
+      font-weight:500;
+    }
+
+    /* MONTHLY MONTH TABS */
+    .monthly-months{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin:4px 0 8px;
+    }
+    .month-tab{
+      border:none;
+      border-radius:999px;
+      padding:4px 10px;
+      font-size:11px;
+      background:#e5e7eb;
+      color:#374151;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .month-tab.active{
+      background:#111827;
+      color:#f9fafb;
+      font-weight:500;
+    }
+
     @media (max-width:768px){
       header{
         flex-direction:column;
@@ -626,12 +672,14 @@
     <!-- DAILY BOARD -->
     <section class="board" id="board-daily">
       <div class="board-header">Daily board</div>
+      <div class="daily-dates" id="daily-date-tabs"></div>
       <div class="columns" id="columns-daily"></div>
     </section>
 
     <!-- MONTHLY TABLE + P&L -->
     <section class="board hidden" id="board-monthly">
       <div class="board-header">Monthly (all cards, sorted by date)</div>
+      <div class="monthly-months" id="monthly-month-tabs"></div>
       <div class="table-wrapper">
         <table class="monthly-table" id="monthly-table"></table>
       </div>
@@ -871,6 +919,7 @@
   let customTo = null;
   let activeView = 'daily';
   let dragItemId = null;
+  let dailySelectedDate = 'all'; // 'all' или конкретная дата YYYY-MM-DD
 
   // ===== UTIL =====
   function generateId() {
@@ -942,7 +991,8 @@
     return { from, to };
   }
 
-  function passesFilter(item) {
+  // только диапазон (без дневного выбора)
+  function passesRangeFilter(item) {
     const range = getFilterRange();
     if (!range) return true;
     const d = parseDate(item.date);
@@ -1027,6 +1077,76 @@
     ];
   }
 
+  // ===== DAILY DATE TABS =====
+  function renderDailyDateTabs() {
+    const container = document.getElementById('daily-date-tabs');
+    if (!container) return;
+
+    const filtered = items.filter(passesRangeFilter);
+    const dates = Array.from(new Set(filtered.map(it => it.date))).sort();
+
+    if (!dates.length) {
+      container.innerHTML = '';
+      return;
+    }
+
+    let html = `
+      <button class="date-tab ${!dailySelectedDate || dailySelectedDate === 'all' ? 'active' : ''}" data-date="all">
+        All
+      </button>
+    `;
+
+    dates.forEach(d => {
+      const active = dailySelectedDate === d ? 'active' : '';
+      html += `<button class="date-tab ${active}" data-date="${d}">${d}</button>`;
+    });
+
+    container.innerHTML = html;
+  }
+
+  // ===== MONTH TABS (MONTHLY) =====
+  function renderMonthlyMonthTabs() {
+    const container = document.getElementById('monthly-month-tabs');
+    if (!container) return;
+
+    if (!items.length) {
+      container.innerHTML = '';
+      return;
+    }
+
+    const monthsSet = new Set();
+    items.forEach(it => {
+      const d = parseDate(it.date);
+      if (!d) return;
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2,'0')}`;
+      monthsSet.add(key);
+    });
+    const months = Array.from(monthsSet).sort();
+    if (!months.length) {
+      container.innerHTML = '';
+      return;
+    }
+
+    const range = getFilterRange();
+    let currentKey = null;
+    if (range) {
+      const d = range.from;
+      currentKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2,'0')}`;
+    }
+
+    const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    let html = '';
+    months.forEach(key => {
+      const [y, m] = key.split('-');
+      const label = `${monthNames[parseInt(m,10)-1]} ${y}`;
+      const active = key === currentKey ? 'active' : '';
+      html += `<button class="month-tab ${active}" data-month-key="${key}">${label}</button>`;
+    });
+
+    container.innerHTML = html;
+  }
+
   // ===== RENDER DAILY =====
   function renderDaily() {
     const container = document.getElementById('columns-daily');
@@ -1073,7 +1193,11 @@
       body.dataset.dropColumn = col.key;
 
       const colItems = items
-        .filter(it => it.column === col.key && passesFilter(it))
+        .filter(it =>
+          it.column === col.key &&
+          passesRangeFilter(it) &&
+          (dailySelectedDate === 'all' || dailySelectedDate === null || it.date === dailySelectedDate)
+        )
         .sort((a,b) => (a.date > b.date ? 1 : -1));
 
       colItems.forEach(it => {
@@ -1202,7 +1326,8 @@
     };
     items.forEach(it => {
       if (it.column !== columnKey) return;
-      if (!passesFilter(it)) return;
+      if (!passesRangeFilter(it)) return;
+      if (dailySelectedDate !== 'all' && dailySelectedDate !== null && it.date !== dailySelectedDate) return;
       const cur = it.currency || 'KZT';
       if (!result[cur]) result[cur] = { income:0, expense:0 };
       if (it.type === 'income') {
@@ -1220,7 +1345,7 @@
       USD: { income:0, expense:0 }
     };
     items.forEach(it => {
-      if (!passesFilter(it)) return;
+      if (!passesRangeFilter(it)) return; // здесь дневной фильтр НЕ учитываем
       const cur = it.currency || 'KZT';
       if (!result[cur]) result[cur] = { income:0, expense:0 };
       if (it.type === 'income') {
@@ -1276,7 +1401,7 @@
   function renderMonthlyTable() {
     const table = document.getElementById('monthly-table');
     const filtered = items
-      .filter(it => passesFilter(it))
+      .filter(it => passesRangeFilter(it))
       .sort((a,b) => a.date === b.date ? a.column.localeCompare(b.column) : (a.date > b.date ? 1 : -1));
 
     if (filtered.length === 0) {
@@ -1353,11 +1478,11 @@
     table.innerHTML = html;
   }
 
-  // ===== MONTHLY P&L (по Excel-логике) =====
+  // ===== MONTHLY P&L =====
   function renderProfitAndLoss() {
     const container = document.getElementById('monthly-pl');
     if (!container) return;
-    const filtered = items.filter(passesFilter);
+    const filtered = items.filter(passesRangeFilter);
     container.innerHTML = '';
 
     if (!filtered.length) {
@@ -1485,7 +1610,7 @@
     const container = document.getElementById('analytics-tables');
     container.innerHTML = '';
 
-    const filtered = items.filter(passesFilter);
+    const filtered = items.filter(passesRangeFilter);
     if (filtered.length === 0) {
       container.innerHTML = '<div class="analytics-note">No data for selected period.</div>';
       return;
@@ -1814,15 +1939,18 @@
       } else {
         customRange.style.display = 'none';
       }
+      dailySelectedDate = 'all';
       refresh();
     });
 
     dateFrom.addEventListener('change', () => {
       customFrom = dateFrom.value || null;
+      dailySelectedDate = 'all';
       refresh();
     });
     dateTo.addEventListener('change', () => {
       customTo = dateTo.value || null;
+      dailySelectedDate = 'all';
       refresh();
     });
   }
@@ -1852,6 +1980,42 @@
     document.addEventListener('click', e => {
       const btn = e.target.closest('button');
       if (!btn) return;
+
+      // date tabs
+      if (btn.classList.contains('date-tab')) {
+        const d = btn.dataset.date;
+        dailySelectedDate = d || 'all';
+        refresh();
+        return;
+      }
+
+      // month tabs
+      if (btn.classList.contains('month-tab')) {
+        const key = btn.dataset.monthKey;
+        if (key) {
+          const [yearStr, monthStr] = key.split('-');
+          const year = parseInt(yearStr,10);
+          const monthIndex = parseInt(monthStr,10) - 1;
+          const fromStr = `${year}-${monthStr}-01`;
+          const lastDay = new Date(year, monthIndex + 1, 0).getDate();
+          const toStr = `${year}-${monthStr}-${String(lastDay).padStart(2,'0')}`;
+
+          filterMode = 'custom';
+          customFrom = fromStr;
+          customTo = toStr;
+
+          const filterSelect = document.getElementById('filter-mode');
+          filterSelect.value = 'custom';
+          document.getElementById('custom-range').style.display = '';
+          document.getElementById('date-from').value = customFrom;
+          document.getElementById('date-to').value = customTo;
+
+          dailySelectedDate = 'all';
+          refresh();
+        }
+        return;
+      }
+
       const action = btn.dataset.action;
       if (action === 'add') {
         const columnKey = btn.dataset.column;
@@ -1866,6 +2030,8 @@
 
   // ===== MAIN REFRESH =====
   function refresh() {
+    renderDailyDateTabs();
+    renderMonthlyMonthTabs();
     renderDaily();
     renderSummary();
     if (activeView === 'monthly') {
