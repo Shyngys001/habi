@@ -375,6 +375,49 @@
       font-variant-numeric:tabular-nums;
     }
 
+    /* ANALYTICS TABLE */
+    .analytics-wrapper{
+      margin-top:6px;
+    }
+    .analytics-note{
+      font-size:11px;
+      color:var(--text-muted);
+      margin-bottom:6px;
+    }
+    .analytics-table-wrapper{
+      margin-top:8px;
+      margin-bottom:10px;
+      overflow-x:auto;
+    }
+    table.analytics-table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:11px;
+      background:#ffffff;
+      border-radius:12px;
+      overflow:hidden;
+    }
+    table.analytics-table thead{
+      background:#111827;
+      color:#f9fafb;
+    }
+    table.analytics-table th,
+    table.analytics-table td{
+      padding:4px 6px;
+      border:1px solid #e5e7eb;
+      text-align:right;
+      font-variant-numeric:tabular-nums;
+    }
+    table.analytics-table th:first-child,
+    table.analytics-table td:first-child{
+      text-align:left;
+      min-width:90px;
+    }
+    table.analytics-table tfoot td{
+      font-weight:600;
+      background:#f3f4f6;
+    }
+
     @media (max-width:768px){
       header{
         flex-direction:column;
@@ -521,11 +564,14 @@
     </div>
     <div class="top-controls">
       <div class="tab-buttons">
-        <button class="tab-btn active" data-board="daily">
+        <button class="tab-btn active" data-view="daily">
           <span class="dot"></span>Daily
         </button>
-        <button class="tab-btn" data-board="monthly">
+        <button class="tab-btn" data-view="monthly">
           <span class="dot"></span>Monthly
+        </button>
+        <button class="tab-btn" data-view="analytics">
+          <span class="dot"></span>Analytics
         </button>
       </div>
       <div class="filters">
@@ -555,6 +601,18 @@
     <section class="board hidden" id="board-monthly">
       <div class="board-header">Monthly board</div>
       <div class="columns" id="columns-monthly"></div>
+    </section>
+
+    <!-- ANALYTICS PAGE -->
+    <section class="board hidden" id="analytics-page">
+      <div class="board-header">Analytics (Daily board)</div>
+      <div class="analytics-wrapper">
+        <div class="analytics-note">
+          Report is built from <strong>Daily</strong> items for the selected period (date filter above).
+          Rows — dates, columns — Fixed / Variable / Additional / Guest, totals shown separately for each currency.
+        </div>
+        <div id="analytics-tables"></div>
+      </div>
     </section>
 
     <!-- SUMMARY -->
@@ -661,7 +719,7 @@
   let filterMode = 'thisMonth';
   let customFrom = null;
   let customTo = null;
-  let activeBoard = 'daily';
+  let activeView = 'daily'; // daily | monthly | analytics
   let dragItemId = null;
 
   // ===== UTIL =====
@@ -710,7 +768,7 @@
       from = today;
       to = endOfDay(today);
     } else if (filterMode === 'thisWeek') {
-      const day = today.getDay();
+      const day = today.getDay(); // 0-6
       const diff = (day + 6) % 7; // Monday start
       from = new Date(today);
       from.setDate(from.getDate() - diff);
@@ -831,7 +889,7 @@
     ];
   }
 
-  // ===== RENDERING =====
+  // ===== RENDERING KANBAN =====
   function renderBoard(board) {
     const columnsDef = board === 'daily' ? DAILY_COLUMNS : MONTHLY_COLUMNS;
     const container = document.getElementById(board === 'daily' ? 'columns-daily' : 'columns-monthly');
@@ -1085,6 +1143,99 @@
     `;
   }
 
+  // ===== ANALYTICS (TABLE PAGE) =====
+  function renderAnalytics() {
+    const container = document.getElementById('analytics-tables');
+    container.innerHTML = '';
+
+    const dailyItems = items.filter(it => it.board === 'daily' && passesFilter(it));
+    if (dailyItems.length === 0) {
+      container.innerHTML = `<div class="analytics-note">No data for selected period.</div>`;
+      return;
+    }
+
+    const dates = Array.from(new Set(dailyItems.map(it => it.date))).sort();
+    const currencies = Array.from(new Set(dailyItems.map(it => it.currency || 'KZT')));
+
+    currencies.forEach(cur => {
+      // подготовка структуры
+      const perDate = {};
+      dates.forEach(d => {
+        perDate[d] = { fixed:0, variable:0, additional:0, guest:0, total:0 };
+      });
+
+      dailyItems
+        .filter(it => (it.currency || 'KZT') === cur)
+        .forEach(it => {
+          const d = it.date;
+          if (!perDate[d]) perDate[d] = { fixed:0, variable:0, additional:0, guest:0, total:0 };
+          const sign = it.type === 'expense' ? -1 : 1;
+          const amt = sign * it.amount;
+          if (perDate[d][it.column] !== undefined) {
+            perDate[d][it.column] += amt;
+          }
+          perDate[d].total += amt;
+        });
+
+      // общие суммы по валюте
+      let sumFixed=0, sumVar=0, sumAdd=0, sumGuest=0, sumTotal=0;
+      dates.forEach(d => {
+        const row = perDate[d];
+        sumFixed += row.fixed;
+        sumVar += row.variable;
+        sumAdd += row.additional;
+        sumGuest += row.guest;
+        sumTotal += row.total;
+      });
+
+      const wrap = document.createElement('div');
+      wrap.className = 'analytics-table-wrapper';
+      const title = document.createElement('div');
+      title.style.fontSize = '11px';
+      title.style.fontWeight = '600';
+      title.style.marginBottom = '4px';
+      title.textContent = `Currency: ${cur}`;
+      wrap.appendChild(title);
+
+      const table = document.createElement('table');
+      table.className = 'analytics-table';
+
+      let html = '<thead><tr>' +
+        '<th>Date</th>' +
+        '<th>Fixed</th>' +
+        '<th>Variable</th>' +
+        '<th>Additional</th>' +
+        '<th>Guest</th>' +
+        '<th>Total</th>' +
+        '</tr></thead><tbody>';
+
+      dates.forEach(d => {
+        const row = perDate[d];
+        html += `<tr>
+          <td>${d}</td>
+          <td>${formatNumber(row.fixed)}</td>
+          <td>${formatNumber(row.variable)}</td>
+          <td>${formatNumber(row.additional)}</td>
+          <td>${formatNumber(row.guest)}</td>
+          <td>${formatNumber(row.total)}</td>
+        </tr>`;
+      });
+
+      html += '</tbody><tfoot><tr>' +
+        `<td>Total</td>` +
+        `<td>${formatNumber(sumFixed)}</td>` +
+        `<td>${formatNumber(sumVar)}</td>` +
+        `<td>${formatNumber(sumAdd)}</td>` +
+        `<td>${formatNumber(sumGuest)}</td>` +
+        `<td>${formatNumber(sumTotal)}</td>` +
+        '</tr></tfoot>';
+
+      table.innerHTML = html;
+      wrap.appendChild(table);
+      container.appendChild(wrap);
+    });
+  }
+
   // ===== MODAL HELPERS =====
   const modalBackdrop = document.getElementById('card-modal-backdrop');
   const modalTitleEl = document.getElementById('modal-title');
@@ -1317,9 +1468,16 @@
       btn.addEventListener('click', () => {
         buttons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        activeBoard = btn.dataset.board;
-        document.getElementById('board-daily').classList.toggle('hidden', activeBoard !== 'daily');
-        document.getElementById('board-monthly').classList.toggle('hidden', activeBoard !== 'monthly');
+        activeView = btn.dataset.view;
+
+        document.getElementById('board-daily').classList.toggle('hidden', activeView !== 'daily');
+        document.getElementById('board-monthly').classList.toggle('hidden', activeView !== 'monthly');
+        document.getElementById('analytics-page').classList.toggle('hidden', activeView !== 'analytics');
+
+        // при переключении таба аналитика сразу пересчитывается
+        if (activeView === 'analytics') {
+          renderAnalytics();
+        }
       });
     });
   }
@@ -1350,6 +1508,9 @@
     renderBoard('daily');
     renderBoard('monthly');
     renderSummary();
+    if (activeView === 'analytics') {
+      renderAnalytics();
+    }
     setupDragDrop();
   }
 
