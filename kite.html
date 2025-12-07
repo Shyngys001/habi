@@ -375,15 +375,41 @@
       font-variant-numeric:tabular-nums;
     }
 
-    /* ANALYTICS TABLE */
-    .analytics-wrapper{
-      margin-top:6px;
+    /* MONTHLY TABLE */
+    .table-wrapper{
+      margin-top:4px;
+      overflow-x:auto;
     }
-    .analytics-note{
+    table.monthly-table{
+      width:100%;
+      border-collapse:collapse;
       font-size:11px;
-      color:var(--text-muted);
-      margin-bottom:6px;
+      background:#ffffff;
+      border-radius:12px;
+      overflow:hidden;
     }
+    table.monthly-table th,
+    table.monthly-table td{
+      padding:4px 6px;
+      border:1px solid #e5e7eb;
+      text-align:right;
+      font-variant-numeric:tabular-nums;
+    }
+    table.monthly-table th:first-child,
+    table.monthly-table td:first-child{
+      text-align:left;
+      min-width:90px;
+    }
+    table.monthly-table th{
+      background:#111827;
+      color:#f9fafb;
+    }
+    table.monthly-table tfoot td{
+      font-weight:600;
+      background:#f3f4f6;
+    }
+
+    /* ANALYTICS & P&L TABLES */
     .analytics-table-wrapper{
       margin-top:8px;
       margin-bottom:10px;
@@ -397,10 +423,6 @@
       border-radius:12px;
       overflow:hidden;
     }
-    table.analytics-table thead{
-      background:#111827;
-      color:#f9fafb;
-    }
     table.analytics-table th,
     table.analytics-table td{
       padding:4px 6px;
@@ -413,9 +435,19 @@
       text-align:left;
       min-width:90px;
     }
+    table.analytics-table thead{
+      background:#111827;
+      color:#f9fafb;
+    }
     table.analytics-table tfoot td{
       font-weight:600;
       background:#f3f4f6;
+    }
+
+    .analytics-note{
+      font-size:11px;
+      color:var(--text-muted);
+      margin-bottom:6px;
     }
 
     @media (max-width:768px){
@@ -559,7 +591,7 @@
     <div class="title-block">
       <h1>Finance Kanban</h1>
       <div class="subtitle">
-        Daily & Monthly expenses / income with dates, comments, payment method and currency. Drag cards, everything saved in your browser.
+        Daily expenses & income with categories, payment methods, currencies and analytics. All data stays in your browser (localStorage).
       </div>
     </div>
     <div class="top-controls">
@@ -597,22 +629,26 @@
       <div class="columns" id="columns-daily"></div>
     </section>
 
-    <!-- MONTHLY BOARD -->
+    <!-- MONTHLY TABLE + P&L -->
     <section class="board hidden" id="board-monthly">
-      <div class="board-header">Monthly board</div>
-      <div class="columns" id="columns-monthly"></div>
+      <div class="board-header">Monthly (all cards, sorted by date)</div>
+      <div class="table-wrapper">
+        <table class="monthly-table" id="monthly-table"></table>
+      </div>
+
+      <div class="analytics-note" style="margin-top:10px;">
+        Profit &amp; Loss summary for the same period (per currency, как в Excel-отчёте).
+      </div>
+      <div id="monthly-pl"></div>
     </section>
 
     <!-- ANALYTICS PAGE -->
     <section class="board hidden" id="analytics-page">
       <div class="board-header">Analytics (Daily board)</div>
-      <div class="analytics-wrapper">
-        <div class="analytics-note">
-          Report is built from <strong>Daily</strong> items for the selected period (date filter above).
-          Rows — dates, columns — Fixed / Variable / Additional / Guest, totals shown separately for each currency.
-        </div>
-        <div id="analytics-tables"></div>
+      <div class="analytics-note">
+        Report is built from all transactions for the selected period. Rows — dates, columns — Fixed / Variable / Additional / Guest, totals by currency.
       </div>
+      <div id="analytics-tables"></div>
     </section>
 
     <!-- SUMMARY -->
@@ -629,8 +665,18 @@
     </div>
     <form id="card-form" class="modal-form">
       <div class="field">
-        <label for="field-title">Title / Category *</label>
-        <input id="field-title" type="text" required>
+        <label>Column</label>
+        <input id="field-column-name" type="text" readonly>
+      </div>
+
+      <div class="field">
+        <label for="field-category">Category *</label>
+        <select id="field-category"></select>
+      </div>
+
+      <div class="field">
+        <label for="field-title">Name (auto from category, можно менять)</label>
+        <input id="field-title" type="text">
       </div>
 
       <div class="field-row">
@@ -683,9 +729,8 @@
         <button type="submit" class="btn btn-primary">Save</button>
       </div>
 
-      <!-- hidden context -->
+      <!-- hidden -->
       <input type="hidden" id="field-id">
-      <input type="hidden" id="field-board">
       <input type="hidden" id="field-column">
       <input type="hidden" id="field-mode">
     </form>
@@ -694,32 +739,137 @@
 
 <script>
   // ===== CONFIG =====
-  const STORAGE_KEY = 'finance_kanban_items_v1';
+  const STORAGE_KEY = 'finance_kanban_items_v2';
 
-  const DAILY_COLUMNS = [
+  const COLUMNS = [
     { key: 'fixed', label: 'Fixed' },
     { key: 'variable', label: 'Variable' },
     { key: 'additional', label: 'Additional' },
-    { key: 'guest', label: 'Guest' },
+    { key: 'guest', label: 'Guest expences' }
   ];
 
-  const MONTHLY_COLUMNS = [
-    { key: 'income', label: 'Income' },
-    { key: 'tour', label: 'Tour Costs' },
-    { key: 'other', label: 'Other Expenses' },
-  ];
+  const CATEGORY_OPTIONS = {
+    fixed: [
+      'RENT',
+      'KITE TRAVEL CARS',
+      'PHONE BALANCE'
+    ],
+    variable: [
+      'SALARY',
+      'OFFICE EXPENCES',
+      'CAR REPAIR',
+      'CAR EXPENCES',
+      'SIM CARDS',
+      'BRANDING',
+      'SHYMBULAK'
+    ],
+    additional: [
+      'DIRECTORS',
+      'BUISNESS TRIP',
+      'BLOGGER EXPENCES',
+      'GAS/CARWASH',
+      'HOTEL',
+      'PARTNER LUNCH',
+      'PARTNER SOUVENIERS'
+    ],
+    guest: [
+      'GUEST LUNCH',
+      'GUEST SOUVENIERS',
+      'OTHER EXPENCES'
+    ]
+  };
 
   const currencySymbols = {
     KZT: '₸',
     USD: '$'
   };
 
+  // P&L row configuration
+  const PL_ROWS = [
+    { key:'REV_TOUR',          label:'Revenue by tour',        group:'revenue' },
+    { key:'REV_HOTEL',         label:'Hotel rooms',            group:'revenue' },
+    { key:'REV_CASHBACKS',     label:'Cashbacks',              group:'revenue' },
+    { key:'REV_OTHER',         label:'Other revenue',          group:'revenue' },
+
+    { key:'COGS_ACCOM',        label:'Cost of accomodation',   group:'cogs' },
+    { key:'COGS_TOUR',         label:'Cost of tour',           group:'cogs' },
+    { key:'COGS_TRANSPORT',    label:'Cost of transport',      group:'cogs' },
+    { key:'COGS_GUIDES',       label:'Cost of guides',         group:'cogs' },
+    { key:'COGS_SERVICE',      label:'Cost of servise',        group:'cogs' },
+    { key:'COGS_GUEST_EXP',    label:'Cost of guest expences', group:'cogs' },
+    { key:'COGS_TRANSFERS',    label:'Cost of transfers',      group:'cogs' },
+    { key:'COGS_SIM',          label:'Cost of sim cards',      group:'cogs' },
+    { key:'COGS_GAS',          label:'Cost of gas',            group:'cogs' },
+    { key:'COGS_CARWASH',      label:'Cost of carwash',        group:'cogs' },
+    { key:'COGS_PARKING',      label:'Cost of parking',        group:'cogs' },
+
+    { key:'OPEX_SALES_COMM',   label:'Sales comissions',       group:'opex' },
+    { key:'OPEX_OFFICE',       label:'Office expenses',        group:'opex' },
+    { key:'OPEX_CAR_REPAIR',   label:'Car repair',             group:'opex' },
+    { key:'OPEX_BRANDING',     label:'Branding',               group:'opex' },
+    { key:'OPEX_BLOGGERS',     label:'Bloggers expenses',      group:'opex' },
+    { key:'OPEX_GUEST_LUNCH',  label:'Guests lunch',           group:'opex' },
+    { key:'OPEX_GUEST_SOUV',   label:'Guests souvenirs',       group:'opex' },
+    { key:'OPEX_OTHER',        label:'Other spendings',        group:'opex' },
+    { key:'OPEX_SALARY_FUND',  label:'Salary fund',            group:'opex' }
+  ];
+
+  function mapCategoryToPLKey(catUpper){
+    switch (catUpper) {
+      case 'REVENUE BY TOUR': return 'REV_TOUR';
+      case 'HOTEL ROOMS': return 'REV_HOTEL';
+      case 'CASHBACKS': return 'REV_CASHBACKS';
+      case 'OTHER REVENUE': return 'REV_OTHER';
+
+      case 'COST OF ACCOMODATION': return 'COGS_ACCOM';
+      case 'COST OF TOUR': return 'COGS_TOUR';
+      case 'COST OF TRANSPORT': return 'COGS_TRANSPORT';
+      case 'COST OF GUIDES': return 'COGS_GUIDES';
+      case 'COST OF SERVISE': return 'COGS_SERVICE';
+      case 'COST OF GUEST EXPENCES': return 'COGS_GUEST_EXP';
+      case 'COST OF TRANSFERS': return 'COGS_TRANSFERS';
+      case 'COST OF SIM CARDS': return 'COGS_SIM';
+      case 'COST OF GAS': return 'COGS_GAS';
+      case 'COST OF CARWASH': return 'COGS_CARWASH';
+      case 'COST OF PARKING': return 'COGS_PARKING';
+
+      case 'SALES COMISSIONS': return 'OPEX_SALES_COMM';
+      case 'OFFICE EXPENCES': return 'OPEX_OFFICE';
+      case 'CAR REPAIR': return 'OPEX_CAR_REPAIR';
+      case 'BRANDING': return 'OPEX_BRANDING';
+      case 'BLOGGERS EXPENCES': return 'OPEX_BLOGGERS';
+      case 'GUEST LUNCH': return 'OPEX_GUEST_LUNCH';
+      case 'GUEST SOUVENIERS': return 'OPEX_GUEST_SOUV';
+      case 'OTHER SPENDINGS': return 'OPEX_OTHER';
+      case 'SALARY FUND': return 'OPEX_SALARY_FUND';
+      default: return null;
+    }
+  }
+
+  function createEmptyPLState(){
+    const rows = {};
+    PL_ROWS.forEach(r => rows[r.key] = 0);
+    return {
+      rows,
+      grossRevenue:0,
+      vat:0,
+      commissions:0,
+      totalCogs:0,
+      netRevenue:0,
+      operationalExp:0,
+      ebitda:0,
+      amortization:0,
+      taxes:0,
+      netIncome:0
+    };
+  }
+
   // ===== STATE =====
   let items = [];
   let filterMode = 'thisMonth';
   let customFrom = null;
   let customTo = null;
-  let activeView = 'daily'; // daily | monthly | analytics
+  let activeView = 'daily';
   let dragItemId = null;
 
   // ===== UTIL =====
@@ -768,7 +918,7 @@
       from = today;
       to = endOfDay(today);
     } else if (filterMode === 'thisWeek') {
-      const day = today.getDay(); // 0-6
+      const day = today.getDay();
       const diff = (day + 6) % 7; // Monday start
       from = new Date(today);
       from.setDate(from.getDate() - diff);
@@ -828,77 +978,63 @@
     items = [
       {
         id: generateId(),
-        board: 'daily',
         column: 'fixed',
-        title: 'Rent',
+        category: 'RENT',
+        title: 'Office rent',
         amount: 120000,
         currency: 'KZT',
-        paymentMethod: 'kaspi',
+        payment: 'kaspi',
         type: 'expense',
         date: today,
-        comment: 'Офис'
+        comment: 'Main office'
       },
       {
         id: generateId(),
-        board: 'daily',
         column: 'variable',
+        category: 'GUEST LUNCH',
         title: 'Guest lunch',
         amount: 18000,
         currency: 'KZT',
-        paymentMethod: 'cash',
+        payment: 'cash',
         type: 'expense',
         date: today,
-        comment: 'Обед с туристами'
+        comment: 'Tourists group'
       },
       {
         id: generateId(),
-        board: 'daily',
         column: 'additional',
+        category: 'BLOGGER EXPENCES',
         title: 'Blog ads',
         amount: 120,
         currency: 'USD',
-        paymentMethod: 'other',
+        payment: 'other',
         type: 'expense',
         date: today,
         comment: 'Instagram promo'
       },
       {
         id: generateId(),
-        board: 'monthly',
-        column: 'income',
-        title: 'Tour revenue',
-        amount: 2500000,
+        column: 'variable',
+        category: 'REVENUE BY TOUR',
+        title: 'Revenue by tour',
+        amount: 104000000,
         currency: 'KZT',
-        paymentMethod: 'kaspi',
+        payment: 'kaspi',
         type: 'income',
         date: today,
-        comment: 'Group tour Jan'
-      },
-      {
-        id: generateId(),
-        board: 'monthly',
-        column: 'tour',
-        title: 'Hotel costs',
-        amount: 800000,
-        currency: 'KZT',
-        paymentMethod: 'halyk',
-        type: 'expense',
-        date: today,
-        comment: 'Hotel Shymbulak'
+        comment: 'Example income'
       }
     ];
   }
 
-  // ===== RENDERING KANBAN =====
-  function renderBoard(board) {
-    const columnsDef = board === 'daily' ? DAILY_COLUMNS : MONTHLY_COLUMNS;
-    const container = document.getElementById(board === 'daily' ? 'columns-daily' : 'columns-monthly');
+  // ===== RENDER DAILY =====
+  function renderDaily() {
+    const container = document.getElementById('columns-daily');
     container.innerHTML = '';
 
-    columnsDef.forEach(col => {
+    COLUMNS.forEach(col => {
       const colDiv = document.createElement('div');
       colDiv.className = 'column';
-      colDiv.dataset.board = board;
       colDiv.dataset.column = col.key;
 
       const header = document.createElement('div');
@@ -913,7 +1049,7 @@
       const headerRight = document.createElement('div');
       headerRight.style.fontSize = '10px';
       headerRight.style.color = 'var(--text-muted)';
-      headerRight.textContent = board === 'daily' ? 'per day' : 'per month';
+      headerRight.textContent = 'per day';
 
       titleRow.appendChild(title);
       titleRow.appendChild(headerRight);
@@ -921,7 +1057,6 @@
 
       const total = document.createElement('div');
       total.className = 'column-total';
-      total.dataset.role = 'column-total';
       header.appendChild(total);
 
       colDiv.appendChild(header);
@@ -929,19 +1064,17 @@
       const addBtn = document.createElement('button');
       addBtn.className = 'add-btn';
       addBtn.dataset.action = 'add';
-      addBtn.dataset.board = board;
       addBtn.dataset.column = col.key;
-      addBtn.innerHTML = `<span class="plus">+</span> Add expense`;
+      addBtn.innerHTML = `<span class="plus">+</span> Add`;
       colDiv.appendChild(addBtn);
 
       const body = document.createElement('div');
       body.className = 'column-body';
       body.dataset.dropColumn = col.key;
-      body.dataset.board = board;
 
-      const colItems = items.filter(
-        it => it.board === board && it.column === col.key && passesFilter(it)
-      );
+      const colItems = items
+        .filter(it => it.column === col.key && passesFilter(it))
+        .sort((a,b) => (a.date > b.date ? 1 : -1));
 
       colItems.forEach(it => {
         const card = buildCard(it);
@@ -952,8 +1085,8 @@
 
       container.appendChild(colDiv);
 
-      const totals = calcColumnTotals(board, col.key);
-      total.textContent = formatColumnTotalsLabel(totals);
+      const totals = calcTotalsForColumn(col.key);
+      total.textContent = formatTotalsLabel(totals);
     });
   }
 
@@ -968,7 +1101,7 @@
 
     const title = document.createElement('div');
     title.className = 'card-title';
-    title.textContent = item.title;
+    title.textContent = item.title || item.category;
 
     const meta = document.createElement('div');
     meta.className = 'card-meta';
@@ -979,11 +1112,10 @@
 
     const payPill = document.createElement('div');
     payPill.className = 'pill';
-    const pm = item.paymentMethod || 'other';
     payPill.textContent =
-      pm === 'cash' ? 'Cash' :
-      pm === 'kaspi' ? 'Kaspi' :
-      pm === 'halyk' ? 'Halyk' : 'Other';
+      item.payment === 'cash' ? 'Cash' :
+      item.payment === 'kaspi' ? 'Kaspi' :
+      item.payment === 'halyk' ? 'Halyk' : 'Other';
 
     const curPill = document.createElement('div');
     curPill.className = 'pill';
@@ -1030,8 +1162,8 @@
     const footer = document.createElement('div');
     footer.className = 'card-footer';
 
-    const idSpan = document.createElement('span');
-    idSpan.textContent = item.board === 'daily' ? 'Daily item' : 'Monthly item';
+    const catSpan = document.createElement('span');
+    catSpan.textContent = item.category;
 
     const actions = document.createElement('div');
     actions.className = 'card-actions';
@@ -1051,7 +1183,7 @@
     actions.appendChild(editBtn);
     actions.appendChild(delBtn);
 
-    footer.appendChild(idSpan);
+    footer.appendChild(catSpan);
     footer.appendChild(actions);
 
     card.appendChild(footer);
@@ -1062,14 +1194,14 @@
     return card;
   }
 
-  // ===== TOTALS & SUMMARY =====
-  function calcColumnTotals(board, column) {
+  // ===== TOTALS =====
+  function calcTotalsForColumn(columnKey) {
     const result = {
       KZT: { income:0, expense:0 },
       USD: { income:0, expense:0 }
     };
     items.forEach(it => {
-      if (it.board !== board || it.column !== column) return;
+      if (it.column !== columnKey) return;
       if (!passesFilter(it)) return;
       const cur = it.currency || 'KZT';
       if (!result[cur]) result[cur] = { income:0, expense:0 };
@@ -1082,89 +1214,293 @@
     return result;
   }
 
-  function formatColumnTotalsLabel(totals) {
+  function calcTotalsAll() {
+    const result = {
+      KZT: { income:0, expense:0 },
+      USD: { income:0, expense:0 }
+    };
+    items.forEach(it => {
+      if (!passesFilter(it)) return;
+      const cur = it.currency || 'KZT';
+      if (!result[cur]) result[cur] = { income:0, expense:0 };
+      if (it.type === 'income') {
+        result[cur].income += it.amount;
+      } else {
+        result[cur].expense += it.amount;
+      }
+    });
+    return result;
+  }
+
+  function formatTotalsLabel(totals) {
     const parts = [];
     Object.keys(totals).forEach(cur => {
       const t = totals[cur];
+      if (!t.income && !t.expense) return;
       const net = t.income - t.expense;
-      if (t.income === 0 && t.expense === 0) return;
       parts.push(`${cur} ${formatNumber(net)}`);
     });
     return parts.join(' • ');
   }
 
-  function calcBoardTotals(board) {
-    const result = {
-      KZT: { income:0, expense:0 },
-      USD: { income:0, expense:0 }
-    };
-    items.forEach(it => {
-      if (it.board !== board) return;
-      if (!passesFilter(it)) return;
-      const cur = it.currency || 'KZT';
-      if (!result[cur]) result[cur] = { income:0, expense:0 };
-      if (it.type === 'income') {
-        result[cur].income += it.amount;
-      } else {
-        result[cur].expense += it.amount;
-      }
-    });
-    return result;
-  }
-
   function renderSummary() {
-    const dailyTotals = calcBoardTotals('daily');
-    const monthlyTotals = calcBoardTotals('monthly');
-    const summaryEl = document.getElementById('summary');
+    const totals = calcTotalsAll();
+    const el = document.getElementById('summary');
 
-    function blockHtml(label, totals) {
-      const currencies = Object.keys(totals).filter(cur => totals[cur].income || totals[cur].expense);
-      if (currencies.length === 0) {
-        return `<div class="summary-block"><span class="summary-label">${label}</span><span class="summary-value">—</span></div>`;
-      }
-      const parts = currencies.map(cur => {
-        const t = totals[cur];
-        const income = t.income;
-        const expense = t.expense;
-        const balance = income - expense;
-        return `${cur}: +${formatNumber(income)} / -${formatNumber(expense)} / =${formatNumber(balance)}`;
-      });
-      return `<div class="summary-block"><span class="summary-label">${label}</span><span class="summary-value">${parts.join(' • ')}</span></div>`;
-    }
+    const currencies = Object.keys(totals).filter(cur => totals[cur].income || totals[cur].expense);
 
-    summaryEl.innerHTML = `
+    const blocks = currencies.map(cur => {
+      const t = totals[cur];
+      const income = t.income;
+      const expense = t.expense;
+      const balance = income - expense;
+      return `
+        <div class="summary-block">
+          <span class="summary-label">${cur}</span>
+          <span class="summary-value">
+            +${formatNumber(income)} / -${formatNumber(expense)} / =${formatNumber(balance)}
+          </span>
+        </div>
+      `;
+    }).join('');
+
+    el.innerHTML = `
       <div class="summary-title">Summary (filtered by period)</div>
       <div class="summary-row">
-        ${blockHtml('Daily', dailyTotals)}
-      </div>
-      <div class="summary-row">
-        ${blockHtml('Monthly', monthlyTotals)}
+        ${blocks || '<div class="summary-block"><span class="summary-label">No data</span></div>'}
       </div>
     `;
   }
 
-  // ===== ANALYTICS (TABLE PAGE) =====
+  // ===== MONTHLY TABLE (ALL CARDS, SORTED BY DATE) =====
+  function renderMonthlyTable() {
+    const table = document.getElementById('monthly-table');
+    const filtered = items
+      .filter(it => passesFilter(it))
+      .sort((a,b) => a.date === b.date ? a.column.localeCompare(b.column) : (a.date > b.date ? 1 : -1));
+
+    if (filtered.length === 0) {
+      table.innerHTML = '<tbody><tr><td>Нет данных для выбранного периода</td></tr></tbody>';
+      return;
+    }
+
+    let html = `
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Column</th>
+          <th>Category</th>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Currency</th>
+          <th>Payment</th>
+          <th>Comment</th>
+        </tr>
+      </thead>
+      <tbody>
+    `;
+
+    // totals per currency
+    const totals = {
+      KZT:{income:0,expense:0},
+      USD:{income:0,expense:0}
+    };
+
+    filtered.forEach(it => {
+      const symbol = currencySymbols[it.currency] || '';
+      const signed = it.type === 'expense' ? -it.amount : it.amount;
+      const colLabel = COLUMNS.find(c => c.key === it.column)?.label || it.column;
+
+      html += `
+        <tr>
+          <td>${it.date}</td>
+          <td>${colLabel}</td>
+          <td>${it.category}</td>
+          <td>${it.title || ''}</td>
+          <td>${it.type.toUpperCase()}</td>
+          <td>${symbol} ${formatNumber(signed)}</td>
+          <td>${it.currency}</td>
+          <td>${it.payment}</td>
+          <td style="text-align:left;">${it.comment || ''}</td>
+        </tr>
+      `;
+
+      const cur = it.currency || 'KZT';
+      if (!totals[cur]) totals[cur] = {income:0,expense:0};
+      if (it.type === 'income') totals[cur].income += it.amount;
+      else totals[cur].expense += it.amount;
+    });
+
+    html += '</tbody><tfoot>';
+
+    Object.keys(totals).forEach(cur => {
+      const t = totals[cur];
+      if (!t.income && !t.expense) return;
+      const balance = t.income - t.expense;
+      html += `
+        <tr>
+          <td colspan="5">TOTAL ${cur}</td>
+          <td>${formatNumber(balance)}</td>
+          <td>${cur}</td>
+          <td colspan="2">+${formatNumber(t.income)} / -${formatNumber(t.expense)}</td>
+        </tr>
+      `;
+    });
+
+    html += '</tfoot>';
+
+    table.innerHTML = html;
+  }
+
+  // ===== MONTHLY P&L (по Excel-логике) =====
+  function renderProfitAndLoss() {
+    const container = document.getElementById('monthly-pl');
+    if (!container) return;
+    const filtered = items.filter(passesFilter);
+    container.innerHTML = '';
+
+    if (!filtered.length) {
+      container.innerHTML = '<div class="analytics-note">No data for selected period.</div>';
+      return;
+    }
+
+    const currencies = Array.from(new Set(filtered.map(it => it.currency || 'KZT')));
+
+    currencies.forEach(cur => {
+      const state = createEmptyPLState();
+      const curItems = filtered.filter(it => (it.currency || 'KZT') === cur);
+
+      curItems.forEach(it => {
+        const catUpper = (it.category || '').trim().toUpperCase();
+        const key = mapCategoryToPLKey(catUpper);
+        if (key) {
+          state.rows[key] += Math.abs(it.amount);
+        }
+        if (catUpper === 'COMISSIONS') {
+          state.commissions += Math.abs(it.amount);
+        }
+        if (catUpper === 'AMORTIZATION') {
+          state.amortization += Math.abs(it.amount);
+        }
+        if (catUpper === 'TAXES') {
+          state.taxes += Math.abs(it.amount);
+        }
+      });
+
+      const revenueSum = PL_ROWS.filter(r=>r.group==='revenue')
+        .reduce((s,r)=>s + state.rows[r.key],0);
+      const cogsSum = PL_ROWS.filter(r=>r.group==='cogs')
+        .reduce((s,r)=>s + state.rows[r.key],0);
+      const opexSum = PL_ROWS.filter(r=>r.group==='opex')
+        .reduce((s,r)=>s + state.rows[r.key],0);
+
+      state.grossRevenue = revenueSum;
+      state.vat = state.grossRevenue * 0.12; // 12% НДС автоматически
+      state.totalCogs = cogsSum;
+      state.netRevenue = state.grossRevenue - state.vat - state.commissions - state.totalCogs;
+      state.operationalExp = opexSum;
+      state.ebitda = state.netRevenue - state.operationalExp;
+      state.netIncome = state.ebitda - state.amortization - state.taxes;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'analytics-table-wrapper';
+
+      const title = document.createElement('div');
+      title.style.fontSize = '11px';
+      title.style.fontWeight = '600';
+      title.style.margin = '6px 0 4px';
+      title.textContent = `P&L — currency: ${cur}`;
+      wrapper.appendChild(title);
+
+      let html = '<table class="analytics-table"><tbody>';
+
+      function row(label, value, bold=false, spacer=false){
+        if (spacer){
+          html += '<tr><td colspan="2" style="border:none;height:4px;"></td></tr>';
+        }
+        const style = bold ? 'font-weight:600;' : '';
+        html += `<tr><td style="text-align:left;${style}">${label}</td><td style="${style}">${formatNumber(value)}</td></tr>`;
+      }
+
+      // Revenue block
+      row('Revenue by tour', state.rows.REV_TOUR);
+      row('Hotel rooms', state.rows.REV_HOTEL);
+      row('Cashbacks', state.rows.REV_CASHBACKS);
+      row('Other revenue', state.rows.REV_OTHER);
+      row('Total Gross Revenue', state.grossRevenue, true);
+
+      row('',0,false,true);
+      row('VAT 12%', state.vat);
+      row('Comissions', state.commissions);
+
+      // COGS
+      row('',0,false,true);
+      row('Cost of accomodation', state.rows.COGS_ACCOM);
+      row('Cost of tour', state.rows.COGS_TOUR);
+      row('Cost of transport', state.rows.COGS_TRANSPORT);
+      row('Cost of guides', state.rows.COGS_GUIDES);
+      row('Cost of servise', state.rows.COGS_SERVICE);
+      row('Cost of guest expences', state.rows.COGS_GUEST_EXP);
+      row('Cost of transfers', state.rows.COGS_TRANSFERS);
+      row('Cost of sim cards', state.rows.COGS_SIM);
+      row('Cost of gas', state.rows.COGS_GAS);
+      row('Cost of carwash', state.rows.COGS_CARWASH);
+      row('Cost of parking', state.rows.COGS_PARKING);
+      row('Total COGS', state.totalCogs, true);
+
+      row('',0,false,true);
+      row('Net Revenue', state.netRevenue, true);
+
+      // OPEX
+      row('',0,false,true);
+      row('Sales comissions', state.rows.OPEX_SALES_COMM);
+      row('Office expenses', state.rows.OPEX_OFFICE);
+      row('Car repair', state.rows.OPEX_CAR_REPAIR);
+      row('Branding', state.rows.OPEX_BRANDING);
+      row('Bloggers expenses', state.rows.OPEX_BLOGGERS);
+      row('Guests lunch', state.rows.OPEX_GUEST_LUNCH);
+      row('Guests souvenirs', state.rows.OPEX_GUEST_SOUV);
+      row('Other spendings', state.rows.OPEX_OTHER);
+      row('Salary fund', state.rows.OPEX_SALARY_FUND);
+      row('Operational expenses', state.operationalExp, true);
+
+      row('',0,false,true);
+      row('EBITDA', state.ebitda, true);
+
+      row('',0,false,true);
+      row('Amortization', state.amortization);
+      row('Taxes', state.taxes);
+      row('Net income', state.netIncome, true);
+
+      html += '</tbody></table>';
+      wrapper.innerHTML += html;
+
+      container.appendChild(wrapper);
+    });
+  }
+
+  // ===== ANALYTICS =====
   function renderAnalytics() {
     const container = document.getElementById('analytics-tables');
     container.innerHTML = '';
 
-    const dailyItems = items.filter(it => it.board === 'daily' && passesFilter(it));
-    if (dailyItems.length === 0) {
-      container.innerHTML = `<div class="analytics-note">No data for selected period.</div>`;
+    const filtered = items.filter(passesFilter);
+    if (filtered.length === 0) {
+      container.innerHTML = '<div class="analytics-note">No data for selected period.</div>';
       return;
     }
 
-    const dates = Array.from(new Set(dailyItems.map(it => it.date))).sort();
-    const currencies = Array.from(new Set(dailyItems.map(it => it.currency || 'KZT')));
+    const dates = Array.from(new Set(filtered.map(it => it.date))).sort();
+    const currencies = Array.from(new Set(filtered.map(it => it.currency || 'KZT')));
 
     currencies.forEach(cur => {
-      // подготовка структуры
       const perDate = {};
       dates.forEach(d => {
         perDate[d] = { fixed:0, variable:0, additional:0, guest:0, total:0 };
       });
 
-      dailyItems
+      filtered
         .filter(it => (it.currency || 'KZT') === cur)
         .forEach(it => {
           const d = it.date;
@@ -1177,15 +1513,14 @@
           perDate[d].total += amt;
         });
 
-      // общие суммы по валюте
-      let sumFixed=0, sumVar=0, sumAdd=0, sumGuest=0, sumTotal=0;
+      let sumFixed=0,sumVar=0,sumAdd=0,sumGuest=0,sumTotal=0;
       dates.forEach(d => {
-        const row = perDate[d];
-        sumFixed += row.fixed;
-        sumVar += row.variable;
-        sumAdd += row.additional;
-        sumGuest += row.guest;
-        sumTotal += row.total;
+        const r = perDate[d];
+        sumFixed += r.fixed;
+        sumVar += r.variable;
+        sumAdd += r.additional;
+        sumGuest += r.guest;
+        sumTotal += r.total;
       });
 
       const wrap = document.createElement('div');
@@ -1200,35 +1535,47 @@
       const table = document.createElement('table');
       table.className = 'analytics-table';
 
-      let html = '<thead><tr>' +
-        '<th>Date</th>' +
-        '<th>Fixed</th>' +
-        '<th>Variable</th>' +
-        '<th>Additional</th>' +
-        '<th>Guest</th>' +
-        '<th>Total</th>' +
-        '</tr></thead><tbody>';
+      let html = `
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Fixed</th>
+            <th>Variable</th>
+            <th>Additional</th>
+            <th>Guest</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+      `;
 
       dates.forEach(d => {
-        const row = perDate[d];
-        html += `<tr>
-          <td>${d}</td>
-          <td>${formatNumber(row.fixed)}</td>
-          <td>${formatNumber(row.variable)}</td>
-          <td>${formatNumber(row.additional)}</td>
-          <td>${formatNumber(row.guest)}</td>
-          <td>${formatNumber(row.total)}</td>
-        </tr>`;
+        const r = perDate[d];
+        html += `
+          <tr>
+            <td>${d}</td>
+            <td>${formatNumber(r.fixed)}</td>
+            <td>${formatNumber(r.variable)}</td>
+            <td>${formatNumber(r.additional)}</td>
+            <td>${formatNumber(r.guest)}</td>
+            <td>${formatNumber(r.total)}</td>
+          </tr>
+        `;
       });
 
-      html += '</tbody><tfoot><tr>' +
-        `<td>Total</td>` +
-        `<td>${formatNumber(sumFixed)}</td>` +
-        `<td>${formatNumber(sumVar)}</td>` +
-        `<td>${formatNumber(sumAdd)}</td>` +
-        `<td>${formatNumber(sumGuest)}</td>` +
-        `<td>${formatNumber(sumTotal)}</td>` +
-        '</tr></tfoot>';
+      html += `
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Total</td>
+            <td>${formatNumber(sumFixed)}</td>
+            <td>${formatNumber(sumVar)}</td>
+            <td>${formatNumber(sumAdd)}</td>
+            <td>${formatNumber(sumGuest)}</td>
+            <td>${formatNumber(sumTotal)}</td>
+          </tr>
+        </tfoot>
+      `;
 
       table.innerHTML = html;
       wrap.appendChild(table);
@@ -1236,17 +1583,18 @@
     });
   }
 
-  // ===== MODAL HELPERS =====
+  // ===== MODAL =====
   const modalBackdrop = document.getElementById('card-modal-backdrop');
   const modalTitleEl = document.getElementById('modal-title');
   const modalErrorEl = document.getElementById('modal-error');
   const formEl = document.getElementById('card-form');
 
   const fieldId = document.getElementById('field-id');
-  const fieldBoard = document.getElementById('field-board');
   const fieldColumn = document.getElementById('field-column');
+  const fieldColumnName = document.getElementById('field-column-name');
   const fieldMode = document.getElementById('field-mode');
 
+  const fieldCategory = document.getElementById('field-category');
   const fieldTitle = document.getElementById('field-title');
   const fieldAmount = document.getElementById('field-amount');
   const fieldCurrency = document.getElementById('field-currency');
@@ -1255,88 +1603,85 @@
   const fieldDate = document.getElementById('field-date');
   const fieldComment = document.getElementById('field-comment');
 
-  function openCardModal(mode, { board, column, item }) {
+  function populateCategoryOptions(columnKey, currentCategory) {
+    const opts = CATEGORY_OPTIONS[columnKey] || [];
+    fieldCategory.innerHTML = '';
+    opts.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat;
+      opt.textContent = cat;
+      fieldCategory.appendChild(opt);
+    });
+    if (currentCategory && !opts.includes(currentCategory)) {
+      const opt = document.createElement('option');
+      opt.value = currentCategory;
+      opt.textContent = currentCategory + ' (custom)';
+      fieldCategory.appendChild(opt);
+    }
+    fieldCategory.value = currentCategory || opts[0] || '';
+    fieldTitle.value = fieldCategory.value;
+  }
+
+  fieldCategory.addEventListener('change', () => {
+    if (!fieldTitle.value || fieldTitle.value === fieldCategory.value) {
+      fieldTitle.value = fieldCategory.value;
+    }
+  });
+
+  function openModal(mode, columnKey, item) {
     fieldMode.value = mode;
+    fieldColumn.value = columnKey;
+    fieldColumnName.value = COLUMNS.find(c => c.key === columnKey)?.label || columnKey;
     modalErrorEl.textContent = '';
 
     if (mode === 'add') {
       modalTitleEl.textContent = 'Add item';
       fieldId.value = '';
-      fieldBoard.value = board;
-      fieldColumn.value = column;
-
-      fieldTitle.value = '';
+      populateCategoryOptions(columnKey, null);
       fieldAmount.value = '';
       fieldCurrency.value = 'KZT';
       fieldPayment.value = 'kaspi';
-
-      let defaultType = 'expense';
-      if (board === 'monthly' && column === 'income') defaultType = 'income';
-      fieldType.value = defaultType;
-
+      fieldType.value = 'expense';
       fieldDate.value = todayDateString();
       fieldComment.value = '';
     } else if (mode === 'edit' && item) {
       modalTitleEl.textContent = 'Edit item';
       fieldId.value = item.id;
-      fieldBoard.value = item.board;
-      fieldColumn.value = item.column;
-
-      fieldTitle.value = item.title || '';
-      fieldAmount.value = item.amount != null ? item.amount : '';
-      fieldCurrency.value = item.currency || 'KZT';
-      fieldPayment.value = item.paymentMethod || 'other';
-      fieldType.value = item.type || 'expense';
-      fieldDate.value = item.date || todayDateString();
+      populateCategoryOptions(columnKey, item.category);
+      fieldTitle.value = item.title || item.category;
+      fieldAmount.value = item.amount;
+      fieldCurrency.value = item.currency;
+      fieldPayment.value = item.payment;
+      fieldType.value = item.type;
+      fieldDate.value = item.date;
       fieldComment.value = item.comment || '';
     }
 
     modalBackdrop.classList.remove('modal-hidden');
   }
 
-  function closeCardModal() {
+  function closeModal() {
     modalBackdrop.classList.add('modal-hidden');
   }
 
-  // ===== ADD / EDIT / DELETE LOGIC =====
-  function handleAdd(board, column) {
-    openCardModal('add', { board, column });
-  }
-
-  function handleEdit(itemId) {
-    const item = items.find(it => it.id === itemId);
-    if (!item) return;
-    openCardModal('edit', { item, board:item.board, column:item.column });
-  }
-
-  function handleDelete(itemId) {
-    const item = items.find(it => it.id === itemId);
-    if (!item) return;
-    if (!confirm('Delete this item?')) return;
-    items = items.filter(it => it.id !== itemId);
-    saveData();
-    refresh();
-  }
-
-  // submit modal form
   formEl.addEventListener('submit', (e) => {
     e.preventDefault();
     modalErrorEl.textContent = '';
 
     const mode = fieldMode.value;
-    const board = fieldBoard.value;
-    const column = fieldColumn.value;
+    const columnKey = fieldColumn.value;
 
-    const title = fieldTitle.value.trim();
+    const category = fieldCategory.value.trim();
+    const title = (fieldTitle.value || category).trim();
     const amount = parseFloat(fieldAmount.value);
     const currency = fieldCurrency.value || 'KZT';
-    const paymentMethod = fieldPayment.value || 'other';
+    const payment = fieldPayment.value || 'other';
     const type = fieldType.value === 'income' ? 'income' : 'expense';
     const date = fieldDate.value;
     const comment = fieldComment.value.trim();
 
-    if (!title) {
-      modalErrorEl.textContent = 'Title is required.';
+    if (!category) {
+      modalErrorEl.textContent = 'Category is required.';
       return;
     }
     if (!amount || amount <= 0) {
@@ -1344,24 +1689,24 @@
       return;
     }
     if (!date || !parseDate(date)) {
-      modalErrorEl.textContent = 'Date is required.';
+      modalErrorEl.textContent = 'Valid date is required.';
       return;
     }
 
     if (mode === 'add') {
       items.push({
         id: generateId(),
-        board,
-        column,
+        column: columnKey,
+        category,
         title,
         amount,
         currency,
-        paymentMethod,
+        payment,
         type,
         date,
         comment
       });
-    } else if (mode === 'edit') {
+    } else {
       const id = fieldId.value;
       const item = items.find(it => it.id === id);
       if (!item) {
@@ -1369,10 +1714,12 @@
         return;
       }
       Object.assign(item, {
+        column: columnKey,
+        category,
         title,
         amount,
         currency,
-        paymentMethod,
+        payment,
         type,
         date,
         comment
@@ -1380,15 +1727,35 @@
     }
 
     saveData();
-    closeCardModal();
+    closeModal();
     refresh();
   });
 
-  document.getElementById('modal-close-btn').addEventListener('click', closeCardModal);
-  document.getElementById('modal-cancel-btn').addEventListener('click', closeCardModal);
+  document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+  document.getElementById('modal-cancel-btn').addEventListener('click', closeModal);
   modalBackdrop.addEventListener('click', (e) => {
-    if (e.target === modalBackdrop) closeCardModal();
+    if (e.target === modalBackdrop) closeModal();
   });
+
+  // ===== ADD / EDIT / DELETE HANDLERS =====
+  function handleAdd(columnKey) {
+    openModal('add', columnKey, null);
+  }
+
+  function handleEdit(id) {
+    const item = items.find(it => it.id === id);
+    if (!item) return;
+    openModal('edit', item.column, item);
+  }
+
+  function handleDelete(id) {
+    const item = items.find(it => it.id === id);
+    if (!item) return;
+    if (!confirm('Delete this item?')) return;
+    items = items.filter(it => it.id !== id);
+    saveData();
+    refresh();
+  }
 
   // ===== DRAG & DROP =====
   function handleDragStart(e) {
@@ -1420,10 +1787,8 @@
         body.classList.remove('drop-target');
         const item = items.find(it => it.id === dragItemId);
         if (!item) return;
-        const newBoard = body.dataset.board;
         const newColumn = body.dataset.dropColumn;
-        if (!newBoard || !newColumn) return;
-        item.board = newBoard;
+        if (!newColumn) return;
         item.column = newColumn;
         saveData();
         refresh();
@@ -1474,40 +1839,39 @@
         document.getElementById('board-monthly').classList.toggle('hidden', activeView !== 'monthly');
         document.getElementById('analytics-page').classList.toggle('hidden', activeView !== 'analytics');
 
-        // при переключении таба аналитика сразу пересчитывается
-        if (activeView === 'analytics') {
-          renderAnalytics();
+        if (activeView === 'monthly') {
+          renderMonthlyTable();
+          renderProfitAndLoss();
         }
+        if (activeView === 'analytics') renderAnalytics();
       });
     });
   }
 
-  // ===== GLOBAL CLICK HANDLERS =====
-  function setupGlobalClickHandlers() {
+  function setupGlobalClicks() {
     document.addEventListener('click', e => {
       const btn = e.target.closest('button');
       if (!btn) return;
-
       const action = btn.dataset.action;
       if (action === 'add') {
-        const board = btn.dataset.board;
-        const column = btn.dataset.column;
-        handleAdd(board, column);
+        const columnKey = btn.dataset.column;
+        handleAdd(columnKey);
       } else if (action === 'edit') {
-        const id = btn.dataset.itemId;
-        handleEdit(id);
+        handleEdit(btn.dataset.itemId);
       } else if (action === 'delete') {
-        const id = btn.dataset.itemId;
-        handleDelete(id);
+        handleDelete(btn.dataset.itemId);
       }
     });
   }
 
   // ===== MAIN REFRESH =====
   function refresh() {
-    renderBoard('daily');
-    renderBoard('monthly');
+    renderDaily();
     renderSummary();
+    if (activeView === 'monthly') {
+      renderMonthlyTable();
+      renderProfitAndLoss();
+    }
     if (activeView === 'analytics') {
       renderAnalytics();
     }
@@ -1518,7 +1882,7 @@
   loadData();
   setupFilters();
   setupTabs();
-  setupGlobalClickHandlers();
+  setupGlobalClicks();
   refresh();
 </script>
 </body>
