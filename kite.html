@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Finance Kanban</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,20 +29,13 @@
     }
 
     *{box-sizing:border-box;}
-
     body{
       margin:0;
       font-family:"Inter",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
       background:var(--bg-page);
       color:var(--text-main);
     }
-
-    .app{
-      max-width:1200px;
-      margin:0 auto;
-      padding:16px 12px 24px;
-    }
-
+    .app{max-width:1200px;margin:0 auto;padding:16px 12px 24px;}
     header{
       background:var(--bg-header);
       border-radius:18px;
@@ -55,12 +48,7 @@
       margin-bottom:16px;
       border:1px solid #e5e7eb;
     }
-
-    .title-block{
-      flex:1;
-      min-width:220px;
-    }
-
+    .title-block{flex:1;min-width:220px;}
     h1{
       margin:0;
       font-size:20px;
@@ -68,19 +56,8 @@
       letter-spacing:0.08em;
       text-transform:uppercase;
     }
-
-    .subtitle{
-      margin-top:4px;
-      font-size:12px;
-      color:var(--text-muted);
-    }
-
-    .top-controls{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-    }
+    .subtitle{margin-top:4px;font-size:12px;color:var(--text-muted);}
+    .top-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
 
     .tab-buttons{
       display:flex;
@@ -90,547 +67,221 @@
       border:1px solid #e5e7eb;
     }
     .tab-btn{
-      border:none;
-      background:transparent;
-      padding:6px 14px;
-      border-radius:999px;
-      font-size:13px;
-      cursor:pointer;
-      color:var(--text-muted);
-      display:flex;
-      align-items:center;
-      gap:6px;
+      border:none;background:transparent;
+      padding:6px 14px;border-radius:999px;
+      font-size:13px;cursor:pointer;color:var(--text-muted);
+      display:flex;align-items:center;gap:6px;
     }
-    .tab-btn span.dot{
-      width:6px;
-      height:6px;
-      border-radius:999px;
-      background:#9ca3af;
-    }
-    .tab-btn.active{
-      background:#111827;
-      color:#f9fafb;
-      font-weight:500;
-    }
-    .tab-btn.active span.dot{
-      background:#f9fafb;
-    }
+    .tab-btn span.dot{width:6px;height:6px;border-radius:999px;background:#9ca3af;}
+    .tab-btn.active{background:#111827;color:#f9fafb;font-weight:500;}
+    .tab-btn.active span.dot{background:#f9fafb;}
 
-    .filters{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      align-items:center;
-      font-size:12px;
+    .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12px;}
+    select,input[type="date"],input[type="number"]{
+      font-family:inherit;font-size:12px;padding:5px 8px;border-radius:8px;
+      border:1px solid #d1d5db;background:#ffffff;color:var(--text-main);outline:none;
     }
-    select,input[type="date"]{
-      font-family:inherit;
-      font-size:12px;
-      padding:5px 8px;
-      border-radius:8px;
-      border:1px solid #d1d5db;
-      background:#ffffff;
-      color:var(--text-main);
-      outline:none;
-    }
-    select:focus,input[type="date"]:focus{
+    select:focus,input[type="date"]:focus,input[type="number"]:focus{
       border-color:var(--accent);
       box-shadow:0 0 0 1px var(--accent-soft);
     }
 
-    main{
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
-
+    main{display:flex;flex-direction:column;gap:14px;}
     .board{
-      background:#f9fafb;
-      border-radius:18px;
-      padding:12px;
-      box-shadow:var(--shadow-soft);
-      border:1px solid #e5e7eb;
+      background:#f9fafb;border-radius:18px;padding:12px;
+      box-shadow:var(--shadow-soft);border:1px solid #e5e7eb;
     }
-
     .board.hidden{display:none;}
-
     .board-header{
-      font-size:12px;
-      text-transform:uppercase;
-      letter-spacing:0.14em;
-      color:var(--text-muted);
-      margin-bottom:6px;
+      font-size:12px;text-transform:uppercase;letter-spacing:0.14em;
+      color:var(--text-muted);margin-bottom:6px;
     }
 
-    .columns{
-      display:flex;
-      gap:12px;
-      overflow-x:auto;
-      padding-bottom:6px;
-    }
-
+    .columns{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;}
     .column{
       background:var(--bg-column);
       border-radius:var(--radius-lg);
-      min-width:220px;
-      max-width:260px;
-      flex:1;
+      min-width:220px;max-width:260px;flex:1;
       border:1px solid var(--border-soft);
       box-shadow:var(--shadow-soft);
-      display:flex;
-      flex-direction:column;
+      display:flex;flex-direction:column;
       max-height:70vh;
     }
-
-    .column-header{
-      padding:10px 10px 6px;
-      border-bottom:1px solid #e5e7eb;
-    }
-    .column-title-row{
-      display:flex;
-      justify-content:space-between;
-      align-items:baseline;
-      gap:6px;
-    }
-    .column-title{
-      font-size:12px;
-      font-weight:600;
-      text-transform:uppercase;
-      letter-spacing:0.14em;
-    }
-    .column-total{
-      font-size:11px;
-      color:var(--text-muted);
-      text-align:right;
-      margin-top:4px;
-      min-height:14px;
-    }
+    .column-header{padding:10px 10px 6px;border-bottom:1px solid #e5e7eb;}
+    .column-title-row{display:flex;justify-content:space-between;align-items:baseline;gap:6px;}
+    .column-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.14em;}
+    .column-total{font-size:11px;color:var(--text-muted);text-align:right;margin-top:4px;min-height:14px;}
 
     .add-btn{
-      margin:6px 10px 8px;
-      font-size:11px;
-      padding:5px 9px;
-      border-radius:999px;
+      margin:6px 10px 8px;font-size:11px;padding:5px 9px;border-radius:999px;
       border:1px dashed var(--border-strong);
-      background:#f9fafb;
-      color:var(--text-muted);
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      gap:6px;
+      background:#f9fafb;color:var(--text-muted);
+      cursor:pointer;display:flex;align-items:center;gap:6px;
     }
-    .add-btn span.plus{
-      font-size:16px;
-      line-height:0;
-      color:var(--accent);
-    }
-    .add-btn:hover{
-      background:#eff6ff;
-      border-style:solid;
-    }
+    .add-btn span.plus{font-size:16px;line-height:0;color:var(--accent);}
+    .add-btn:hover{background:#eff6ff;border-style:solid;}
 
-    .column-body{
-      padding:0 8px 8px;
-      overflow-y:auto;
-      flex:1;
-    }
+    .column-body{padding:0 8px 8px;overflow-y:auto;flex:1;}
 
     .card{
       background:var(--bg-card);
       border-radius:var(--radius-md);
       border:1px solid var(--border-soft);
-      padding:8px 8px 6px;
-      margin-bottom:6px;
+      padding:8px 8px 6px;margin-bottom:6px;
       box-shadow:var(--shadow-card);
       cursor:grab;
     }
-    .card.dragging{
-      opacity:0.6;
-      box-shadow:0 0 0 2px var(--accent-soft);
-    }
+    .card.dragging{opacity:0.6;box-shadow:0 0 0 2px var(--accent-soft);}
 
-    .card-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:6px;
-      margin-bottom:4px;
-    }
-    .card-title{
-      font-size:12px;
-      font-weight:500;
-      word-break:break-word;
-    }
-    .card-meta{
-      display:flex;
-      gap:4px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
+    .card-header{display:flex;justify-content:space-between;align-items:flex-start;gap:6px;margin-bottom:4px;}
+    .card-title{font-size:12px;font-weight:500;word-break:break-word;}
+    .card-meta{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;}
     .pill{
-      padding:2px 6px;
-      border-radius:999px;
-      font-size:10px;
-      border:1px solid #e5e7eb;
-      background:#f3f4f6;
-      color:var(--text-muted);
-      white-space:nowrap;
+      padding:2px 6px;border-radius:999px;font-size:10px;
+      border:1px solid #e5e7eb;background:#f3f4f6;color:var(--text-muted);white-space:nowrap;
     }
     .pill.type-income{border-color:#bbf7d0;background:#ecfdf3;color:#166534;}
     .pill.type-expense{border-color:#fecaca;background:#fef2f2;color:#991b1b;}
 
-    .card-row{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:6px;
-      font-size:11px;
-      margin-bottom:2px;
-    }
-    .amount-block{
-      display:flex;
-      align-items:center;
-      gap:4px;
-      font-variant-numeric:tabular-nums;
-    }
-    .amount{
-      font-weight:600;
-    }
+    .card-row{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:11px;margin-bottom:2px;}
+    .amount-block{display:flex;align-items:center;gap:4px;font-variant-numeric:tabular-nums;}
+    .amount{font-weight:600;}
     .comment{
-      flex:1;
-      text-align:right;
-      color:var(--text-muted);
-      font-style:italic;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
+      flex:1;text-align:right;color:var(--text-muted);font-style:italic;
+      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
     }
 
-    .card-footer{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-top:4px;
-      font-size:10px;
-      color:var(--text-muted);
-    }
+    .card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:4px;font-size:10px;color:var(--text-muted);}
+    .card-actions{display:flex;gap:6px;}
+    .icon-btn{border:none;background:transparent;padding:0;font-size:11px;cursor:pointer;color:var(--text-muted);}
+    .icon-btn:hover{color:var(--accent);}
+    .icon-btn.delete:hover{color:var(--danger);}
 
-    .card-actions{
-      display:flex;
-      gap:6px;
-    }
-    .icon-btn{
-      border:none;
-      background:transparent;
-      padding:0;
-      font-size:11px;
-      cursor:pointer;
-      color:var(--text-muted);
-    }
-    .icon-btn:hover{
-      color:var(--accent);
-    }
-    .icon-btn.delete:hover{
-      color:var(--danger);
-    }
-
-    .drop-target{
-      border:1px dashed var(--accent);
-    }
+    .drop-target{border:1px dashed var(--accent);}
 
     .summary{
+      background:#ffffff;border-radius:16px;padding:10px 12px;
+      box-shadow:var(--shadow-soft);border:1px solid #e5e7eb;
+      font-size:11px;display:flex;flex-direction:column;gap:4px;
+    }
+    .summary-title{
+      font-size:11px;text-transform:uppercase;letter-spacing:0.14em;
+      color:var(--text-muted);margin-bottom:2px;
+    }
+    .summary-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px;}
+    .summary-block{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+    .summary-label{font-weight:500;}
+    .summary-value{font-variant-numeric:tabular-nums;}
+
+    .table-wrapper{margin-top:4px;overflow-x:auto;}
+    table.monthly-table{
+      width:100%;border-collapse:collapse;font-size:11px;background:#ffffff;
+      border-radius:12px;overflow:hidden;
+    }
+    table.monthly-table th,table.monthly-table td{
+      padding:4px 6px;border:1px solid #e5e7eb;text-align:right;font-variant-numeric:tabular-nums;
+    }
+    table.monthly-table th:first-child,table.monthly-table td:first-child{text-align:left;min-width:90px;}
+    table.monthly-table th{background:#111827;color:#f9fafb;}
+    table.monthly-table tfoot td{font-weight:600;background:#f3f4f6;}
+
+    .analytics-table-wrapper{margin-top:8px;margin-bottom:10px;overflow-x:auto;}
+    table.analytics-table{
+      width:100%;border-collapse:collapse;font-size:11px;background:#ffffff;
+      border-radius:12px;overflow:hidden;
+    }
+    table.analytics-table th,table.analytics-table td{
+      padding:4px 6px;border:1px solid #e5e7eb;text-align:right;font-variant-numeric:tabular-nums;
+    }
+    table.analytics-table th:first-child,table.analytics-table td:first-child{text-align:left;min-width:90px;}
+    table.analytics-table thead{background:#111827;color:#f9fafb;}
+    table.analytics-table tfoot td{font-weight:600;background:#f3f4f6;}
+
+    .analytics-note{font-size:11px;color:var(--text-muted);margin-bottom:6px;}
+
+    .daily-dates{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px;}
+    .date-tab{
+      border:none;border-radius:999px;padding:4px 10px;font-size:11px;
+      background:#e5e7eb;color:#374151;cursor:pointer;white-space:nowrap;
+    }
+    .date-tab.active{background:#111827;color:#f9fafb;font-weight:500;}
+
+    .monthly-months{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px;}
+    .month-tab{
+      border:none;border-radius:999px;padding:4px 10px;font-size:11px;
+      background:#e5e7eb;color:#374151;cursor:pointer;white-space:nowrap;
+    }
+    .month-tab.active{background:#111827;color:#f9fafb;font-weight:500;}
+
+    @media (max-width:768px){
+      header{flex-direction:column;align-items:flex-start;}
+      .top-controls{width:100%;justify-content:space-between;}
+      .columns{max-height:none;}
+      .column{max-height:none;}
+    }
+
+    /* ===== MODAL ===== */
+    .modal-backdrop{
+      position:fixed;inset:0;background:rgba(15,23,42,0.45);
+      display:flex;align-items:center;justify-content:center;z-index:50;
+    }
+    .modal-hidden{display:none;}
+    .modal{
+      background:#ffffff;border-radius:18px;padding:16px 18px 14px;width:100%;
+      max-width:420px;box-shadow:0 20px 40px rgba(15,23,42,0.35);
+      border:1px solid #e5e7eb;
+    }
+    .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+    .modal-title{font-size:14px;font-weight:600;}
+    .modal-close{border:none;background:transparent;font-size:18px;line-height:1;cursor:pointer;color:var(--text-muted);}
+    .modal-close:hover{color:var(--text-main);}
+    .modal-form{display:flex;flex-direction:column;gap:8px;font-size:12px;}
+    .field{display:flex;flex-direction:column;gap:3px;}
+    .field-row{display:flex;gap:8px;}
+    .field label{font-size:11px;color:var(--text-muted);}
+    .field input,.field select,.field textarea{
+      font-family:inherit;font-size:12px;padding:6px 8px;border-radius:8px;
+      border:1px solid #d1d5db;outline:none;background:#ffffff;
+    }
+    .field textarea{resize:vertical;min-height:50px;}
+    .field input:focus,.field select:focus,.field textarea:focus{
+      border-color:var(--accent);box-shadow:0 0 0 1px var(--accent-soft);
+    }
+    .modal-error{font-size:11px;color:var(--danger);min-height:14px;}
+    .modal-footer{margin-top:6px;display:flex;justify-content:flex-end;gap:8px;}
+    .btn{border:none;border-radius:999px;font-size:12px;padding:6px 14px;cursor:pointer;font-weight:500;}
+    .btn-secondary{background:#e5e7eb;color:#111827;}
+    .btn-secondary:hover{background:#d1d5db;}
+    .btn-primary{background:#111827;color:#f9fafb;}
+    .btn-primary:hover{background:#020617;}
+
+    /* ===== P&L SETTINGS ===== */
+    .pl-settings{
       background:#ffffff;
       border-radius:16px;
       padding:10px 12px;
       box-shadow:var(--shadow-soft);
       border:1px solid #e5e7eb;
-      font-size:11px;
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-    }
-    .summary-title{
-      font-size:11px;
-      text-transform:uppercase;
-      letter-spacing:0.14em;
-      color:var(--text-muted);
-      margin-bottom:2px;
-    }
-    .summary-row{
+      margin-top:10px;
       display:flex;
       flex-wrap:wrap;
-      justify-content:space-between;
-      gap:4px;
-    }
-    .summary-block{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      align-items:center;
-    }
-    .summary-label{
-      font-weight:500;
-    }
-    .summary-value{
-      font-variant-numeric:tabular-nums;
-    }
-
-    /* MONTHLY TABLE */
-    .table-wrapper{
-      margin-top:4px;
-      overflow-x:auto;
-    }
-    table.monthly-table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:11px;
-      background:#ffffff;
-      border-radius:12px;
-      overflow:hidden;
-    }
-    table.monthly-table th,
-    table.monthly-table td{
-      padding:4px 6px;
-      border:1px solid #e5e7eb;
-      text-align:right;
-      font-variant-numeric:tabular-nums;
-    }
-    table.monthly-table th:first-child,
-    table.monthly-table td:first-child{
-      text-align:left;
-      min-width:90px;
-    }
-    table.monthly-table th{
-      background:#111827;
-      color:#f9fafb;
-    }
-    table.monthly-table tfoot td{
-      font-weight:600;
-      background:#f3f4f6;
-    }
-
-    /* ANALYTICS & P&L TABLES */
-    .analytics-table-wrapper{
-      margin-top:8px;
-      margin-bottom:10px;
-      overflow-x:auto;
-    }
-    table.analytics-table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:11px;
-      background:#ffffff;
-      border-radius:12px;
-      overflow:hidden;
-    }
-    table.analytics-table th,
-    table.analytics-table td{
-      padding:4px 6px;
-      border:1px solid #e5e7eb;
-      text-align:right;
-      font-variant-numeric:tabular-nums;
-    }
-    table.analytics-table th:first-child,
-    table.analytics-table td:first-child{
-      text-align:left;
-      min-width:90px;
-    }
-    table.analytics-table thead{
-      background:#111827;
-      color:#f9fafb;
-    }
-    table.analytics-table tfoot td{
-      font-weight:600;
-      background:#f3f4f6;
-    }
-
-    .analytics-note{
-      font-size:11px;
-      color:var(--text-muted);
-      margin-bottom:6px;
-    }
-
-    /* DAILY DATE TABS */
-    .daily-dates{
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-      margin:4px 0 8px;
-    }
-    .date-tab{
-      border:none;
-      border-radius:999px;
-      padding:4px 10px;
-      font-size:11px;
-      background:#e5e7eb;
-      color:#374151;
-      cursor:pointer;
-      white-space:nowrap;
-    }
-    .date-tab.active{
-      background:#111827;
-      color:#f9fafb;
-      font-weight:500;
-    }
-
-    /* MONTHLY MONTH TABS */
-    .monthly-months{
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-      margin:4px 0 8px;
-    }
-    .month-tab{
-      border:none;
-      border-radius:999px;
-      padding:4px 10px;
-      font-size:11px;
-      background:#e5e7eb;
-      color:#374151;
-      cursor:pointer;
-      white-space:nowrap;
-    }
-    .month-tab.active{
-      background:#111827;
-      color:#f9fafb;
-      font-weight:500;
-    }
-
-    @media (max-width:768px){
-      header{
-        flex-direction:column;
-        align-items:flex-start;
-      }
-      .top-controls{
-        width:100%;
-        justify-content:space-between;
-      }
-      .columns{
-        max-height:none;
-      }
-      .column{
-        max-height:none;
-      }
-    }
-
-    /* ===== MODAL ===== */
-    .modal-backdrop{
-      position:fixed;
-      inset:0;
-      background:rgba(15,23,42,0.45);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:50;
-    }
-    .modal-hidden{
-      display:none;
-    }
-    .modal{
-      background:#ffffff;
-      border-radius:18px;
-      padding:16px 18px 14px;
-      width:100%;
-      max-width:420px;
-      box-shadow:0 20px 40px rgba(15,23,42,0.35);
-      border:1px solid #e5e7eb;
-    }
-    .modal-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:10px;
-    }
-    .modal-title{
-      font-size:14px;
-      font-weight:600;
-    }
-    .modal-close{
-      border:none;
-      background:transparent;
-      font-size:18px;
-      line-height:1;
-      cursor:pointer;
-      color:var(--text-muted);
-    }
-    .modal-close:hover{
-      color:var(--text-main);
-    }
-    .modal-form{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
+      gap:10px;
+      align-items:flex-end;
       font-size:12px;
     }
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap:3px;
+    .pl-settings .field{
+      min-width:150px;
+      flex:1;
     }
-    .field-row{
-      display:flex;
-      gap:8px;
-    }
-    .field label{
+    .pl-settings .hint{
+      flex-basis:100%;
       font-size:11px;
       color:var(--text-muted);
-    }
-    .field input,
-    .field select,
-    .field textarea{
-      font-family:inherit;
-      font-size:12px;
-      padding:6px 8px;
-      border-radius:8px;
-      border:1px solid #d1d5db;
-      outline:none;
-      background:#ffffff;
-    }
-    .field textarea{
-      resize:vertical;
-      min-height:50px;
-    }
-    .field input:focus,
-    .field select:focus,
-    .field textarea:focus{
-      border-color:var(--accent);
-      box-shadow:0 0 0 1px var(--accent-soft);
-    }
-    .modal-error{
-      font-size:11px;
-      color:var(--danger);
-      min-height:14px;
-    }
-    .modal-footer{
-      margin-top:6px;
-      display:flex;
-      justify-content:flex-end;
-      gap:8px;
-    }
-    .btn{
-      border:none;
-      border-radius:999px;
-      font-size:12px;
-      padding:6px 14px;
-      cursor:pointer;
-      font-weight:500;
-    }
-    .btn-secondary{
-      background:#e5e7eb;
-      color:#111827;
-    }
-    .btn-secondary:hover{
-      background:#d1d5db;
-    }
-    .btn-primary{
-      background:#111827;
-      color:#f9fafb;
-    }
-    .btn-primary:hover{
-      background:#020617;
+      margin-top:-2px;
     }
   </style>
 </head>
+
 <body>
 <div class="app">
   <header>
@@ -640,18 +291,14 @@
         Daily expenses & income with categories, payment methods, currencies and analytics. All data stays in your browser (localStorage).
       </div>
     </div>
+
     <div class="top-controls">
       <div class="tab-buttons">
-        <button class="tab-btn active" data-view="daily">
-          <span class="dot"></span>Daily
-        </button>
-        <button class="tab-btn" data-view="monthly">
-          <span class="dot"></span>Monthly
-        </button>
-        <button class="tab-btn" data-view="analytics">
-          <span class="dot"></span>Analytics
-        </button>
+        <button class="tab-btn active" data-view="daily"><span class="dot"></span>Daily</button>
+        <button class="tab-btn" data-view="monthly"><span class="dot"></span>Monthly</button>
+        <button class="tab-btn" data-view="analytics"><span class="dot"></span>Analytics</button>
       </div>
+
       <div class="filters">
         <span>Period:</span>
         <select id="filter-mode">
@@ -685,8 +332,32 @@
       </div>
 
       <div class="analytics-note" style="margin-top:10px;">
-        Profit &amp; Loss summary for the same period (per currency, как в Excel-отчёте).
+        Profit &amp; Loss summary for the same period (per currency).
       </div>
+
+      <!-- NEW: P&L SETTINGS -->
+      <div class="pl-settings" id="pl-settings">
+        <div class="field">
+          <label for="pl-vat">VAT %</label>
+          <input id="pl-vat" type="number" min="0" step="0.01" />
+        </div>
+        <div class="field">
+          <label for="pl-comm">Commissions %</label>
+          <input id="pl-comm" type="number" min="0" step="0.01" />
+        </div>
+        <div class="field">
+          <label for="pl-amor">Amortization %</label>
+          <input id="pl-amor" type="number" min="0" step="0.01" />
+        </div>
+        <div class="field">
+          <label for="pl-tax">Taxes %</label>
+          <input id="pl-tax" type="number" min="0" step="0.01" />
+        </div>
+        <div class="hint">
+          VAT/Commissions считаются от <b>Total revenue</b>. Amortization/Taxes считаются от <b>EBITDA</b>.
+        </div>
+      </div>
+
       <div id="monthly-pl"></div>
     </section>
 
@@ -711,6 +382,7 @@
       <div class="modal-title" id="modal-title">Add item</div>
       <button class="modal-close" type="button" id="modal-close-btn">&times;</button>
     </div>
+
     <form id="card-form" class="modal-form">
       <div class="field">
         <label>Column</label>
@@ -777,7 +449,6 @@
         <button type="submit" class="btn btn-primary">Save</button>
       </div>
 
-      <!-- hidden -->
       <input type="hidden" id="field-id">
       <input type="hidden" id="field-column">
       <input type="hidden" id="field-mode">
@@ -788,6 +459,7 @@
 <script>
   // ===== CONFIG =====
   const STORAGE_KEY = 'finance_kanban_items_v2';
+  const PL_SETTINGS_KEY = 'finance_kanban_pl_settings_v1';
 
   const COLUMNS = [
     { key: 'fixed', label: 'Fixed' },
@@ -809,7 +481,8 @@
       'CAR EXPENCES',
       'SIM CARDS',
       'BRANDING',
-      'SHYMBULAK'
+      'SHYMBULAK',
+      'REVENUE BY TOUR'
     ],
     additional: [
       'DIRECTORS',
@@ -827,89 +500,89 @@
     ]
   };
 
-  const currencySymbols = {
-    KZT: '₸',
-    USD: '$'
-  };
+  const currencySymbols = { KZT: '₸', USD: '$' };
 
-  // P&L row configuration
-  const PL_ROWS = [
-    { key:'REV_TOUR',          label:'Revenue by tour',        group:'revenue' },
-    { key:'REV_HOTEL',         label:'Hotel rooms',            group:'revenue' },
-    { key:'REV_CASHBACKS',     label:'Cashbacks',              group:'revenue' },
-    { key:'REV_OTHER',         label:'Other revenue',          group:'revenue' },
+  // ===== P&L CATEGORY RULES (edit as you want) =====
+  const REVENUE_CATEGORIES = new Set([
+    'REVENUE BY TOUR',
+    'CASHBACKS',
+    'OTHER REVENUE',
+    'HOTEL ROOMS'
+  ]);
 
-    { key:'COGS_ACCOM',        label:'Cost of accomodation',   group:'cogs' },
-    { key:'COGS_TOUR',         label:'Cost of tour',           group:'cogs' },
-    { key:'COGS_TRANSPORT',    label:'Cost of transport',      group:'cogs' },
-    { key:'COGS_GUIDES',       label:'Cost of guides',         group:'cogs' },
-    { key:'COGS_SERVICE',      label:'Cost of servise',        group:'cogs' },
-    { key:'COGS_GUEST_EXP',    label:'Cost of guest expences', group:'cogs' },
-    { key:'COGS_TRANSFERS',    label:'Cost of transfers',      group:'cogs' },
-    { key:'COGS_SIM',          label:'Cost of sim cards',      group:'cogs' },
-    { key:'COGS_GAS',          label:'Cost of gas',            group:'cogs' },
-    { key:'COGS_CARWASH',      label:'Cost of carwash',        group:'cogs' },
-    { key:'COGS_PARKING',      label:'Cost of parking',        group:'cogs' },
+  const COGS_HOTEL_CATEGORIES = new Set(['HOTEL', 'HOTEL ROOMS']);
+  const COGS_AUTO_CATEGORIES  = new Set(['KITE TRAVEL CARS','CAR EXPENCES','CAR REPAIR','GAS/CARWASH']);
+  const COGS_OTHER_CATEGORIES = new Set(['SIM CARDS','SHYMBULAK','PHONE BALANCE','GUEST LUNCH','GUEST SOUVENIERS','OTHER EXPENCES']);
 
-    { key:'OPEX_SALES_COMM',   label:'Sales comissions',       group:'opex' },
-    { key:'OPEX_OFFICE',       label:'Office expenses',        group:'opex' },
-    { key:'OPEX_CAR_REPAIR',   label:'Car repair',             group:'opex' },
-    { key:'OPEX_BRANDING',     label:'Branding',               group:'opex' },
-    { key:'OPEX_BLOGGERS',     label:'Bloggers expenses',      group:'opex' },
-    { key:'OPEX_GUEST_LUNCH',  label:'Guests lunch',           group:'opex' },
-    { key:'OPEX_GUEST_SOUV',   label:'Guests souvenirs',       group:'opex' },
-    { key:'OPEX_OTHER',        label:'Other spendings',        group:'opex' },
-    { key:'OPEX_SALARY_FUND',  label:'Salary fund',            group:'opex' }
-  ];
+  function normalizeCat(s){ return (s || '').trim().toUpperCase(); }
 
-  function mapCategoryToPLKey(catUpper){
-    switch (catUpper) {
-      case 'REVENUE BY TOUR': return 'REV_TOUR';
-      case 'HOTEL ROOMS': return 'REV_HOTEL';
-      case 'CASHBACKS': return 'REV_CASHBACKS';
-      case 'OTHER REVENUE': return 'REV_OTHER';
+  // ===== P&L SETTINGS =====
+  function defaultPLSettings(){
+    return { vatRate: 12, commRate: 0, amortRate: 0, taxRate: 0 }; // in %
+  }
+  let plSettings = defaultPLSettings();
 
-      case 'COST OF ACCOMODATION': return 'COGS_ACCOM';
-      case 'COST OF TOUR': return 'COGS_TOUR';
-      case 'COST OF TRANSPORT': return 'COGS_TRANSPORT';
-      case 'COST OF GUIDES': return 'COGS_GUIDES';
-      case 'COST OF SERVISE': return 'COGS_SERVICE';
-      case 'COST OF GUEST EXPENCES': return 'COGS_GUEST_EXP';
-      case 'COST OF TRANSFERS': return 'COGS_TRANSFERS';
-      case 'COST OF SIM CARDS': return 'COGS_SIM';
-      case 'COST OF GAS': return 'COGS_GAS';
-      case 'COST OF CARWASH': return 'COGS_CARWASH';
-      case 'COST OF PARKING': return 'COGS_PARKING';
-
-      case 'SALES COMISSIONS': return 'OPEX_SALES_COMM';
-      case 'OFFICE EXPENCES': return 'OPEX_OFFICE';
-      case 'CAR REPAIR': return 'OPEX_CAR_REPAIR';
-      case 'BRANDING': return 'OPEX_BRANDING';
-      case 'BLOGGERS EXPENCES': return 'OPEX_BLOGGERS';
-      case 'GUEST LUNCH': return 'OPEX_GUEST_LUNCH';
-      case 'GUEST SOUVENIERS': return 'OPEX_GUEST_SOUV';
-      case 'OTHER SPENDINGS': return 'OPEX_OTHER';
-      case 'SALARY FUND': return 'OPEX_SALARY_FUND';
-      default: return null;
+  function loadPLSettings(){
+    try{
+      const raw = localStorage.getItem(PL_SETTINGS_KEY);
+      if(!raw){ plSettings = defaultPLSettings(); savePLSettings(); }
+      else{
+        const parsed = JSON.parse(raw);
+        plSettings = {
+          vatRate:  Number(parsed.vatRate ?? 12),
+          commRate: Number(parsed.commRate ?? 0),
+          amortRate:Number(parsed.amortRate ?? 0),
+          taxRate:  Number(parsed.taxRate ?? 0),
+        };
+      }
+    }catch(e){
+      plSettings = defaultPLSettings();
+      savePLSettings();
     }
   }
+  function savePLSettings(){
+    localStorage.setItem(PL_SETTINGS_KEY, JSON.stringify(plSettings));
+  }
 
-  function createEmptyPLState(){
-    const rows = {};
-    PL_ROWS.forEach(r => rows[r.key] = 0);
-    return {
-      rows,
-      grossRevenue:0,
-      vat:0,
-      commissions:0,
-      totalCogs:0,
-      netRevenue:0,
-      operationalExp:0,
-      ebitda:0,
-      amortization:0,
-      taxes:0,
-      netIncome:0
+  function syncPLInputs(){
+    const vat = document.getElementById('pl-vat');
+    const comm = document.getElementById('pl-comm');
+    const amor = document.getElementById('pl-amor');
+    const tax = document.getElementById('pl-tax');
+    if(!vat) return;
+
+    vat.value = plSettings.vatRate;
+    comm.value = plSettings.commRate;
+    amor.value = plSettings.amortRate;
+    tax.value = plSettings.taxRate;
+  }
+
+  function setupPLInputs(){
+    const vat = document.getElementById('pl-vat');
+    const comm = document.getElementById('pl-comm');
+    const amor = document.getElementById('pl-amor');
+    const tax = document.getElementById('pl-tax');
+    if(!vat) return;
+
+    const onChange = () => {
+      plSettings.vatRate   = clampPercent(vat.value);
+      plSettings.commRate  = clampPercent(comm.value);
+      plSettings.amortRate = clampPercent(amor.value);
+      plSettings.taxRate   = clampPercent(tax.value);
+      savePLSettings();
+      if(activeView === 'monthly') renderProfitAndLoss();
     };
+
+    [vat,comm,amor,tax].forEach(inp => {
+      inp.addEventListener('input', onChange);
+      inp.addEventListener('change', onChange);
+    });
+  }
+
+  function clampPercent(v){
+    const n = Number(v);
+    if(!isFinite(n) || n < 0) return 0;
+    return Math.min(n, 100);
   }
 
   // ===== STATE =====
@@ -919,25 +592,22 @@
   let customTo = null;
   let activeView = 'daily';
   let dragItemId = null;
-  let dailySelectedDate = 'all'; // 'all' или конкретная дата YYYY-MM-DD
+  let dailySelectedDate = 'all';
 
   // ===== UTIL =====
   function generateId() {
     return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,8);
   }
-
   function parseDate(str) {
     if (!str) return null;
     const [y, m, d] = str.split('-').map(Number);
     if (!y || !m || !d) return null;
     return new Date(y, m - 1, d);
   }
-
   function formatNumber(num) {
     if (isNaN(num)) return '0';
     return num.toLocaleString('ru-RU', { maximumFractionDigits: 2 });
   }
-
   function todayDateString() {
     const d = new Date();
     const y = d.getFullYear();
@@ -945,18 +615,8 @@
     const day = String(d.getDate()).padStart(2,'0');
     return `${y}-${m}-${day}`;
   }
-
-  function startOfDay(d) {
-    const x = new Date(d);
-    x.setHours(0,0,0,0);
-    return x;
-  }
-
-  function endOfDay(d) {
-    const x = new Date(d);
-    x.setHours(23,59,59,999);
-    return x;
-  }
+  function startOfDay(d) { const x = new Date(d); x.setHours(0,0,0,0); return x; }
+  function endOfDay(d) { const x = new Date(d); x.setHours(23,59,59,999); return x; }
 
   function getFilterRange() {
     const now = new Date();
@@ -968,7 +628,7 @@
       to = endOfDay(today);
     } else if (filterMode === 'thisWeek') {
       const day = today.getDay();
-      const diff = (day + 6) % 7; // Monday start
+      const diff = (day + 6) % 7;
       from = new Date(today);
       from.setDate(from.getDate() - diff);
       to = new Date(from);
@@ -987,11 +647,9 @@
     } else {
       return null;
     }
-
     return { from, to };
   }
 
-  // только диапазон (без дневного выбора)
   function passesRangeFilter(item) {
     const range = getFilterRange();
     if (!range) return true;
@@ -1012,13 +670,11 @@
         items = JSON.parse(raw);
       }
     } catch (e) {
-      console.error('Failed to load data', e);
       items = [];
       seedDemoData();
       saveData();
     }
   }
-
   function saveData() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }
@@ -1040,7 +696,7 @@
       },
       {
         id: generateId(),
-        column: 'variable',
+        column: 'guest',
         category: 'GUEST LUNCH',
         title: 'Guest lunch',
         amount: 18000,
@@ -1085,22 +741,15 @@
     const filtered = items.filter(passesRangeFilter);
     const dates = Array.from(new Set(filtered.map(it => it.date))).sort();
 
-    if (!dates.length) {
-      container.innerHTML = '';
-      return;
-    }
+    if (!dates.length) { container.innerHTML = ''; return; }
 
     let html = `
-      <button class="date-tab ${!dailySelectedDate || dailySelectedDate === 'all' ? 'active' : ''}" data-date="all">
-        All
-      </button>
+      <button class="date-tab ${!dailySelectedDate || dailySelectedDate === 'all' ? 'active' : ''}" data-date="all">All</button>
     `;
-
     dates.forEach(d => {
       const active = dailySelectedDate === d ? 'active' : '';
       html += `<button class="date-tab ${active}" data-date="${d}">${d}</button>`;
     });
-
     container.innerHTML = html;
   }
 
@@ -1109,10 +758,7 @@
     const container = document.getElementById('monthly-month-tabs');
     if (!container) return;
 
-    if (!items.length) {
-      container.innerHTML = '';
-      return;
-    }
+    if (!items.length) { container.innerHTML = ''; return; }
 
     const monthsSet = new Set();
     items.forEach(it => {
@@ -1122,10 +768,7 @@
       monthsSet.add(key);
     });
     const months = Array.from(monthsSet).sort();
-    if (!months.length) {
-      container.innerHTML = '';
-      return;
-    }
+    if (!months.length) { container.innerHTML = ''; return; }
 
     const range = getFilterRange();
     let currentKey = null;
@@ -1159,6 +802,7 @@
 
       const header = document.createElement('div');
       header.className = 'column-header';
+
       const titleRow = document.createElement('div');
       titleRow.className = 'column-title-row';
 
@@ -1200,13 +844,9 @@
         )
         .sort((a,b) => (a.date > b.date ? 1 : -1));
 
-      colItems.forEach(it => {
-        const card = buildCard(it);
-        body.appendChild(card);
-      });
+      colItems.forEach(it => body.appendChild(buildCard(it)));
 
       colDiv.appendChild(body);
-
       container.appendChild(colDiv);
 
       const totals = calcTotalsForColumn(col.key);
@@ -1255,13 +895,15 @@
 
     const rowAmount = document.createElement('div');
     rowAmount.className = 'card-row';
+
     const amountBlock = document.createElement('div');
     amountBlock.className = 'amount-block';
 
     const symbol = currencySymbols[item.currency] || '';
+    const signed = item.type === 'expense' ? -item.amount : item.amount;
+
     const amountSpan = document.createElement('span');
     amountSpan.className = 'amount';
-    const signed = item.type === 'expense' ? -item.amount : item.amount;
     amountSpan.textContent = `${symbol} ${formatNumber(signed)}`;
 
     amountBlock.appendChild(amountSpan);
@@ -1320,39 +962,27 @@
 
   // ===== TOTALS =====
   function calcTotalsForColumn(columnKey) {
-    const result = {
-      KZT: { income:0, expense:0 },
-      USD: { income:0, expense:0 }
-    };
+    const result = { KZT: { income:0, expense:0 }, USD: { income:0, expense:0 } };
     items.forEach(it => {
       if (it.column !== columnKey) return;
       if (!passesRangeFilter(it)) return;
       if (dailySelectedDate !== 'all' && dailySelectedDate !== null && it.date !== dailySelectedDate) return;
       const cur = it.currency || 'KZT';
       if (!result[cur]) result[cur] = { income:0, expense:0 };
-      if (it.type === 'income') {
-        result[cur].income += it.amount;
-      } else {
-        result[cur].expense += it.amount;
-      }
+      if (it.type === 'income') result[cur].income += it.amount;
+      else result[cur].expense += it.amount;
     });
     return result;
   }
 
   function calcTotalsAll() {
-    const result = {
-      KZT: { income:0, expense:0 },
-      USD: { income:0, expense:0 }
-    };
+    const result = { KZT: { income:0, expense:0 }, USD: { income:0, expense:0 } };
     items.forEach(it => {
-      if (!passesRangeFilter(it)) return; // здесь дневной фильтр НЕ учитываем
+      if (!passesRangeFilter(it)) return;
       const cur = it.currency || 'KZT';
       if (!result[cur]) result[cur] = { income:0, expense:0 };
-      if (it.type === 'income') {
-        result[cur].income += it.amount;
-      } else {
-        result[cur].expense += it.amount;
-      }
+      if (it.type === 'income') result[cur].income += it.amount;
+      else result[cur].expense += it.amount;
     });
     return result;
   }
@@ -1373,18 +1003,13 @@
     const el = document.getElementById('summary');
 
     const currencies = Object.keys(totals).filter(cur => totals[cur].income || totals[cur].expense);
-
     const blocks = currencies.map(cur => {
       const t = totals[cur];
-      const income = t.income;
-      const expense = t.expense;
-      const balance = income - expense;
+      const balance = t.income - t.expense;
       return `
         <div class="summary-block">
           <span class="summary-label">${cur}</span>
-          <span class="summary-value">
-            +${formatNumber(income)} / -${formatNumber(expense)} / =${formatNumber(balance)}
-          </span>
+          <span class="summary-value">+${formatNumber(t.income)} / -${formatNumber(t.expense)} / =${formatNumber(balance)}</span>
         </div>
       `;
     }).join('');
@@ -1397,7 +1022,7 @@
     `;
   }
 
-  // ===== MONTHLY TABLE (ALL CARDS, SORTED BY DATE) =====
+  // ===== MONTHLY TABLE =====
   function renderMonthlyTable() {
     const table = document.getElementById('monthly-table');
     const filtered = items
@@ -1412,25 +1037,14 @@
     let html = `
       <thead>
         <tr>
-          <th>Date</th>
-          <th>Column</th>
-          <th>Category</th>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Amount</th>
-          <th>Currency</th>
-          <th>Payment</th>
-          <th>Comment</th>
+          <th>Date</th><th>Column</th><th>Category</th><th>Name</th><th>Type</th>
+          <th>Amount</th><th>Currency</th><th>Payment</th><th>Comment</th>
         </tr>
       </thead>
       <tbody>
     `;
 
-    // totals per currency
-    const totals = {
-      KZT:{income:0,expense:0},
-      USD:{income:0,expense:0}
-    };
+    const totals = { KZT:{income:0,expense:0}, USD:{income:0,expense:0} };
 
     filtered.forEach(it => {
       const symbol = currencySymbols[it.currency] || '';
@@ -1458,7 +1072,6 @@
     });
 
     html += '</tbody><tfoot>';
-
     Object.keys(totals).forEach(cur => {
       const t = totals[cur];
       if (!t.income && !t.expense) return;
@@ -1472,16 +1085,91 @@
         </tr>
       `;
     });
-
     html += '</tfoot>';
-
     table.innerHTML = html;
   }
 
-  // ===== MONTHLY P&L =====
+  // ===== NEW: MONTHLY P&L (your formula) =====
+  function sumByPredicate(list, pred){
+    let s = 0;
+    for(const it of list){
+      if(!pred(it)) continue;
+      s += Math.abs(Number(it.amount || 0));
+    }
+    return s;
+  }
+
+  function buildPLForCurrency(curItems){
+    const vatRate = (plSettings.vatRate || 0) / 100;
+    const commRate = (plSettings.commRate || 0) / 100;
+    const amortRate = (plSettings.amortRate || 0) / 100;
+    const taxRate = (plSettings.taxRate || 0) / 100;
+
+    // Revenue facts (from INCOME items)
+    const revenueByTour = sumByPredicate(curItems, it =>
+      it.type === 'income' && normalizeCat(it.category) === 'REVENUE BY TOUR'
+    );
+    const cashbacks = sumByPredicate(curItems, it =>
+      it.type === 'income' && normalizeCat(it.category) === 'CASHBACKS'
+    );
+    const otherRevenue = sumByPredicate(curItems, it =>
+      it.type === 'income' && normalizeCat(it.category) === 'OTHER REVENUE'
+    );
+
+    const totalRevenue = revenueByTour + cashbacks + otherRevenue;
+
+    // VAT / Commissions (input %)
+    const vat = totalRevenue * vatRate;
+    const commissions = totalRevenue * commRate;
+
+    // COGS facts (from EXPENSE items)
+    const hotelFact = sumByPredicate(curItems, it =>
+      it.type === 'expense' && COGS_HOTEL_CATEGORIES.has(normalizeCat(it.category))
+    );
+    const autoFact = sumByPredicate(curItems, it =>
+      it.type === 'expense' && COGS_AUTO_CATEGORIES.has(normalizeCat(it.category))
+    );
+    const otherCogsFact = sumByPredicate(curItems, it =>
+      it.type === 'expense' && COGS_OTHER_CATEGORIES.has(normalizeCat(it.category))
+    );
+
+    const totalCogs = vat + commissions + hotelFact + autoFact + otherCogsFact;
+
+    // Net revenue
+    const netRevenue = totalRevenue - totalCogs;
+
+    // Operational expenses = все EXPENSE, которые НЕ попали в COGS
+    const operationalExpenses = sumByPredicate(curItems, it => {
+      if(it.type !== 'expense') return false;
+      const c = normalizeCat(it.category);
+      const isCogs = COGS_HOTEL_CATEGORIES.has(c) || COGS_AUTO_CATEGORIES.has(c) || COGS_OTHER_CATEGORIES.has(c);
+      return !isCogs;
+    });
+
+    const ebitda = netRevenue - operationalExpenses;
+
+    const amortization = ebitda * amortRate;
+    const taxes = ebitda * taxRate;
+
+    const netIncome = ebitda - (amortization + taxes);
+
+    return {
+      revenueByTour, cashbacks, otherRevenue, totalRevenue,
+      vat, commissions,
+      hotelFact, autoFact, otherCogsFact, totalCogs,
+      netRevenue,
+      operationalExpenses,
+      ebitda,
+      amortization,
+      taxes,
+      netIncome
+    };
+  }
+
   function renderProfitAndLoss() {
     const container = document.getElementById('monthly-pl');
     if (!container) return;
+
     const filtered = items.filter(passesRangeFilter);
     container.innerHTML = '';
 
@@ -1493,40 +1181,8 @@
     const currencies = Array.from(new Set(filtered.map(it => it.currency || 'KZT')));
 
     currencies.forEach(cur => {
-      const state = createEmptyPLState();
       const curItems = filtered.filter(it => (it.currency || 'KZT') === cur);
-
-      curItems.forEach(it => {
-        const catUpper = (it.category || '').trim().toUpperCase();
-        const key = mapCategoryToPLKey(catUpper);
-        if (key) {
-          state.rows[key] += Math.abs(it.amount);
-        }
-        if (catUpper === 'COMISSIONS') {
-          state.commissions += Math.abs(it.amount);
-        }
-        if (catUpper === 'AMORTIZATION') {
-          state.amortization += Math.abs(it.amount);
-        }
-        if (catUpper === 'TAXES') {
-          state.taxes += Math.abs(it.amount);
-        }
-      });
-
-      const revenueSum = PL_ROWS.filter(r=>r.group==='revenue')
-        .reduce((s,r)=>s + state.rows[r.key],0);
-      const cogsSum = PL_ROWS.filter(r=>r.group==='cogs')
-        .reduce((s,r)=>s + state.rows[r.key],0);
-      const opexSum = PL_ROWS.filter(r=>r.group==='opex')
-        .reduce((s,r)=>s + state.rows[r.key],0);
-
-      state.grossRevenue = revenueSum;
-      state.vat = state.grossRevenue * 0.12; // 12% НДС автоматически
-      state.totalCogs = cogsSum;
-      state.netRevenue = state.grossRevenue - state.vat - state.commissions - state.totalCogs;
-      state.operationalExp = opexSum;
-      state.ebitda = state.netRevenue - state.operationalExp;
-      state.netIncome = state.ebitda - state.amortization - state.taxes;
+      const pl = buildPLForCurrency(curItems);
 
       const wrapper = document.createElement('div');
       wrapper.className = 'analytics-table-wrapper';
@@ -1541,62 +1197,45 @@
       let html = '<table class="analytics-table"><tbody>';
 
       function row(label, value, bold=false, spacer=false){
-        if (spacer){
-          html += '<tr><td colspan="2" style="border:none;height:4px;"></td></tr>';
-        }
+        if (spacer) html += '<tr><td colspan="2" style="border:none;height:4px;"></td></tr>';
         const style = bold ? 'font-weight:600;' : '';
         html += `<tr><td style="text-align:left;${style}">${label}</td><td style="${style}">${formatNumber(value)}</td></tr>`;
       }
 
       // Revenue block
-      row('Revenue by tour', state.rows.REV_TOUR);
-      row('Hotel rooms', state.rows.REV_HOTEL);
-      row('Cashbacks', state.rows.REV_CASHBACKS);
-      row('Other revenue', state.rows.REV_OTHER);
-      row('Total Gross Revenue', state.grossRevenue, true);
+      row('Revenue by tour (fact)', pl.revenueByTour);
+      row('Cashbacks', pl.cashbacks);
+      row('Other revenue', pl.otherRevenue);
+      row('Total revenue', pl.totalRevenue, true);
 
-      row('',0,false,true);
-      row('VAT 12%', state.vat);
-      row('Comissions', state.commissions);
+      // VAT & commissions
+      row('', 0, false, true);
+      row(`VAT (${formatNumber(plSettings.vatRate)}%)`, pl.vat);
+      row(`Commissions (${formatNumber(plSettings.commRate)}%)`, pl.commissions);
 
-      // COGS
-      row('',0,false,true);
-      row('Cost of accomodation', state.rows.COGS_ACCOM);
-      row('Cost of tour', state.rows.COGS_TOUR);
-      row('Cost of transport', state.rows.COGS_TRANSPORT);
-      row('Cost of guides', state.rows.COGS_GUIDES);
-      row('Cost of servise', state.rows.COGS_SERVICE);
-      row('Cost of guest expences', state.rows.COGS_GUEST_EXP);
-      row('Cost of transfers', state.rows.COGS_TRANSFERS);
-      row('Cost of sim cards', state.rows.COGS_SIM);
-      row('Cost of gas', state.rows.COGS_GAS);
-      row('Cost of carwash', state.rows.COGS_CARWASH);
-      row('Cost of parking', state.rows.COGS_PARKING);
-      row('Total COGS', state.totalCogs, true);
+      // COGS facts
+      row('', 0, false, true);
+      row('Hotels (fact)', pl.hotelFact);
+      row('Auto (fact)', pl.autoFact);
+      row('Other COGS (fact)', pl.otherCogsFact);
+      row('Total COGS', pl.totalCogs, true);
 
-      row('',0,false,true);
-      row('Net Revenue', state.netRevenue, true);
+      row('', 0, false, true);
+      row('Net revenue', pl.netRevenue, true);
 
       // OPEX
-      row('',0,false,true);
-      row('Sales comissions', state.rows.OPEX_SALES_COMM);
-      row('Office expenses', state.rows.OPEX_OFFICE);
-      row('Car repair', state.rows.OPEX_CAR_REPAIR);
-      row('Branding', state.rows.OPEX_BRANDING);
-      row('Bloggers expenses', state.rows.OPEX_BLOGGERS);
-      row('Guests lunch', state.rows.OPEX_GUEST_LUNCH);
-      row('Guests souvenirs', state.rows.OPEX_GUEST_SOUV);
-      row('Other spendings', state.rows.OPEX_OTHER);
-      row('Salary fund', state.rows.OPEX_SALARY_FUND);
-      row('Operational expenses', state.operationalExp, true);
+      row('', 0, false, true);
+      row('Operational expenses (from Daily expenses)', pl.operationalExpenses, true);
 
-      row('',0,false,true);
-      row('EBITDA', state.ebitda, true);
+      row('', 0, false, true);
+      row('EBITDA', pl.ebitda, true);
 
-      row('',0,false,true);
-      row('Amortization', state.amortization);
-      row('Taxes', state.taxes);
-      row('Net income', state.netIncome, true);
+      // Amortization & taxes (from EBITDA)
+      row('', 0, false, true);
+      row(`Amortization (${formatNumber(plSettings.amortRate)}%)`, pl.amortization);
+      row(`Taxes (${formatNumber(plSettings.taxRate)}%)`, pl.taxes);
+
+      row('Net income', pl.netIncome, true);
 
       html += '</tbody></table>';
       wrapper.innerHTML += html;
@@ -1621,35 +1260,26 @@
 
     currencies.forEach(cur => {
       const perDate = {};
-      dates.forEach(d => {
-        perDate[d] = { fixed:0, variable:0, additional:0, guest:0, total:0 };
-      });
+      dates.forEach(d => perDate[d] = { fixed:0, variable:0, additional:0, guest:0, total:0 });
 
-      filtered
-        .filter(it => (it.currency || 'KZT') === cur)
-        .forEach(it => {
-          const d = it.date;
-          if (!perDate[d]) perDate[d] = { fixed:0, variable:0, additional:0, guest:0, total:0 };
-          const sign = it.type === 'expense' ? -1 : 1;
-          const amt = sign * it.amount;
-          if (perDate[d][it.column] !== undefined) {
-            perDate[d][it.column] += amt;
-          }
-          perDate[d].total += amt;
-        });
+      filtered.filter(it => (it.currency || 'KZT') === cur).forEach(it => {
+        const d = it.date;
+        if (!perDate[d]) perDate[d] = { fixed:0, variable:0, additional:0, guest:0, total:0 };
+        const sign = it.type === 'expense' ? -1 : 1;
+        const amt = sign * it.amount;
+        if (perDate[d][it.column] !== undefined) perDate[d][it.column] += amt;
+        perDate[d].total += amt;
+      });
 
       let sumFixed=0,sumVar=0,sumAdd=0,sumGuest=0,sumTotal=0;
       dates.forEach(d => {
         const r = perDate[d];
-        sumFixed += r.fixed;
-        sumVar += r.variable;
-        sumAdd += r.additional;
-        sumGuest += r.guest;
-        sumTotal += r.total;
+        sumFixed += r.fixed; sumVar += r.variable; sumAdd += r.additional; sumGuest += r.guest; sumTotal += r.total;
       });
 
       const wrap = document.createElement('div');
       wrap.className = 'analytics-table-wrapper';
+
       const title = document.createElement('div');
       title.style.fontSize = '11px';
       title.style.fontWeight = '600';
@@ -1662,14 +1292,7 @@
 
       let html = `
         <thead>
-          <tr>
-            <th>Date</th>
-            <th>Fixed</th>
-            <th>Variable</th>
-            <th>Additional</th>
-            <th>Guest</th>
-            <th>Total</th>
-          </tr>
+          <tr><th>Date</th><th>Fixed</th><th>Variable</th><th>Additional</th><th>Guest</th><th>Total</th></tr>
         </thead>
         <tbody>
       `;
@@ -1785,9 +1408,7 @@
     modalBackdrop.classList.remove('modal-hidden');
   }
 
-  function closeModal() {
-    modalBackdrop.classList.add('modal-hidden');
-  }
+  function closeModal() { modalBackdrop.classList.add('modal-hidden'); }
 
   formEl.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -1805,50 +1426,17 @@
     const date = fieldDate.value;
     const comment = fieldComment.value.trim();
 
-    if (!category) {
-      modalErrorEl.textContent = 'Category is required.';
-      return;
-    }
-    if (!amount || amount <= 0) {
-      modalErrorEl.textContent = 'Amount must be positive.';
-      return;
-    }
-    if (!date || !parseDate(date)) {
-      modalErrorEl.textContent = 'Valid date is required.';
-      return;
-    }
+    if (!category) { modalErrorEl.textContent = 'Category is required.'; return; }
+    if (!amount || amount <= 0) { modalErrorEl.textContent = 'Amount must be positive.'; return; }
+    if (!date || !parseDate(date)) { modalErrorEl.textContent = 'Valid date is required.'; return; }
 
     if (mode === 'add') {
-      items.push({
-        id: generateId(),
-        column: columnKey,
-        category,
-        title,
-        amount,
-        currency,
-        payment,
-        type,
-        date,
-        comment
-      });
+      items.push({ id: generateId(), column: columnKey, category, title, amount, currency, payment, type, date, comment });
     } else {
       const id = fieldId.value;
       const item = items.find(it => it.id === id);
-      if (!item) {
-        modalErrorEl.textContent = 'Item not found.';
-        return;
-      }
-      Object.assign(item, {
-        column: columnKey,
-        category,
-        title,
-        amount,
-        currency,
-        payment,
-        type,
-        date,
-        comment
-      });
+      if (!item) { modalErrorEl.textContent = 'Item not found.'; return; }
+      Object.assign(item, { column: columnKey, category, title, amount, currency, payment, type, date, comment });
     }
 
     saveData();
@@ -1858,28 +1446,17 @@
 
   document.getElementById('modal-close-btn').addEventListener('click', closeModal);
   document.getElementById('modal-cancel-btn').addEventListener('click', closeModal);
-  modalBackdrop.addEventListener('click', (e) => {
-    if (e.target === modalBackdrop) closeModal();
-  });
+  modalBackdrop.addEventListener('click', (e) => { if (e.target === modalBackdrop) closeModal(); });
 
-  // ===== ADD / EDIT / DELETE HANDLERS =====
-  function handleAdd(columnKey) {
-    openModal('add', columnKey, null);
-  }
-
-  function handleEdit(id) {
-    const item = items.find(it => it.id === id);
-    if (!item) return;
-    openModal('edit', item.column, item);
-  }
-
+  // ===== ADD / EDIT / DELETE =====
+  function handleAdd(columnKey) { openModal('add', columnKey, null); }
+  function handleEdit(id) { const item = items.find(it => it.id === id); if (!item) return; openModal('edit', item.column, item); }
   function handleDelete(id) {
     const item = items.find(it => it.id === id);
     if (!item) return;
     if (!confirm('Delete this item?')) return;
     items = items.filter(it => it.id !== id);
-    saveData();
-    refresh();
+    saveData(); refresh();
   }
 
   // ===== DRAG & DROP =====
@@ -1889,13 +1466,11 @@
     card.classList.add('dragging');
     e.dataTransfer.effectAllowed = 'move';
   }
-
   function handleDragEnd(e) {
     e.currentTarget.classList.remove('dragging');
     dragItemId = null;
     document.querySelectorAll('.column-body').forEach(el => el.classList.remove('drop-target'));
   }
-
   function setupDragDrop() {
     document.querySelectorAll('.column-body').forEach(body => {
       body.addEventListener('dragover', e => {
@@ -1903,9 +1478,7 @@
         e.preventDefault();
         body.classList.add('drop-target');
       });
-      body.addEventListener('dragleave', () => {
-        body.classList.remove('drop-target');
-      });
+      body.addEventListener('dragleave', () => body.classList.remove('drop-target'));
       body.addEventListener('drop', e => {
         if (!dragItemId) return;
         e.preventDefault();
@@ -1968,6 +1541,7 @@
         document.getElementById('analytics-page').classList.toggle('hidden', activeView !== 'analytics');
 
         if (activeView === 'monthly') {
+          syncPLInputs();
           renderMonthlyTable();
           renderProfitAndLoss();
         }
@@ -1981,15 +1555,12 @@
       const btn = e.target.closest('button');
       if (!btn) return;
 
-      // date tabs
       if (btn.classList.contains('date-tab')) {
-        const d = btn.dataset.date;
-        dailySelectedDate = d || 'all';
+        dailySelectedDate = btn.dataset.date || 'all';
         refresh();
         return;
       }
 
-      // month tabs
       if (btn.classList.contains('month-tab')) {
         const key = btn.dataset.monthKey;
         if (key) {
@@ -2017,14 +1588,9 @@
       }
 
       const action = btn.dataset.action;
-      if (action === 'add') {
-        const columnKey = btn.dataset.column;
-        handleAdd(columnKey);
-      } else if (action === 'edit') {
-        handleEdit(btn.dataset.itemId);
-      } else if (action === 'delete') {
-        handleDelete(btn.dataset.itemId);
-      }
+      if (action === 'add') handleAdd(btn.dataset.column);
+      else if (action === 'edit') handleEdit(btn.dataset.itemId);
+      else if (action === 'delete') handleDelete(btn.dataset.itemId);
     });
   }
 
@@ -2034,21 +1600,24 @@
     renderMonthlyMonthTabs();
     renderDaily();
     renderSummary();
+
     if (activeView === 'monthly') {
+      syncPLInputs();
       renderMonthlyTable();
       renderProfitAndLoss();
     }
-    if (activeView === 'analytics') {
-      renderAnalytics();
-    }
+    if (activeView === 'analytics') renderAnalytics();
+
     setupDragDrop();
   }
 
   // ===== INIT =====
+  loadPLSettings();
   loadData();
   setupFilters();
   setupTabs();
   setupGlobalClicks();
+  setupPLInputs();
   refresh();
 </script>
 </body>
